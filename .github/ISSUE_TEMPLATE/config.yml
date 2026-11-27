@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/rajeevkannav/JumpStart_Pro_Plus/security/advisories/new
+    about: Please report vulnerabilities privately via GitHub Security Advisories, not public issues.
