@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "provider": "google-ai-studio-free-tier",
+  "costUsd": 0,
+  "generatedAt": "2026-11-27T06:44:55.537Z",
+  "totals": {
+    "calls": 3,
+    "promptTokens": 16109,
+    "candidatesTokens": 1481,
+    "thoughtsTokens": 0,
+    "totalTokens": 17590,
+    "elapsedMs": 14542
+  },
+  "calls": [
+    {
+      "phase": "incremental-build",
+      "timestamp": "2026-11-27T06:44:03.627Z",
+      "model": "gemini-3.1-flash-lite",
+      "elapsedMs": 6874,
+      "promptTokenCount": 6759,
+      "candidatesTokenCount": 977,
+      "thoughtsTokenCount": 0,
+      "totalTokenCount": 7736
+    },
+    {
+      "phase": "repair-1",
+      "timestamp": "2026-11-27T06:44:07.666Z",
+      "model": "gemini-3.1-flash-lite",
+      "elapsedMs": 2165,
+      "promptTokenCount": 4700,
+      "candidatesTokenCount": 240,
+      "thoughtsTokenCount": 0,
+      "totalTokenCount": 4940
+    },
+    {
+      "phase": "repair-2",
+      "timestamp": "2026-11-27T06:44:48.799Z",
+      "model": "gemini-3.1-flash-lite-preview",
+      "elapsedMs": 5503,
+      "promptTokenCount": 4650,
+      "candidatesTokenCount": 264,
+      "thoughtsTokenCount": 0,
+      "totalTokenCount": 4914
+    }
+  ]
+}
