@@ -24,13 +24,12 @@ outcome:
   capabilities:
     - rails-multi-tenant-security
     - quantumblack-rails-ui
-    - render-free-tier-ops
+    - railway-neon-free-tier-ops
     - wcag-reflow-a11y
     - security-hardening
 
 deployment:
-  target: render
-  render:
-    region: oregon
+  target: railway # Railway free plan + Neon free Postgres (no credit card, never billable)
+  railway:
     health_path: /up
     service_name: jumpstart-pro-plus
