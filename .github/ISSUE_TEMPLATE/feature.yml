@@ -1,5 +1,5 @@
 name: Feature (mogra)
-description: Request a feature. ProductionLine (mogra) will spec, build, verify, and deploy it to Render.
+description: Request a feature. ProductionLine (mogra) will spec, build, verify, and deploy it to Railway.
 title: "feat(scope): "
 labels: ["mogra:intake"]
 body:
