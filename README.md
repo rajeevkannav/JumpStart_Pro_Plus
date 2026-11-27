@@ -32,13 +32,14 @@ gh secret set GEMINI_API_KEY -R rajeevkannav/JumpStart_Pro_Plus
 | :--- | :--- | :--- |
 | `MOGRA_BOT_TOKEN` | Now | Fine-grained PAT: Contents, Issues, Pull requests R/W; Metadata R |
 | `GEMINI_API_KEY` | Now | Default `gemini-cli` harness (or `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` if overridden in `.mogra.yaml`) |
+| `RAILS_MASTER_KEY` | Before the first issue | 32 hex characters. `mogra` encrypts `config/credentials.yml.enc` with it when it creates the app; the same value is set on Railway. Never committed |
 | `RAILWAY_APP_URL` | After Railway setup | Public URL; `mogra` checks `/up` after each merge |
 | `ANDROID_KEYSTORE_*`, `ANDROID_KEY_*` | Mobile | Signed release `.apk` |
 
 ### 3. Neon + Railway (no credit card)
 1. **Neon:** create a project (AWS US West), then copy the **direct** connection string (connection pooling off; it includes `sslmode=require`).
 2. **Railway:** **New Project → Deploy from GitHub repo** → this repo. Railway builds the `Dockerfile` using `railway.toml`; `bin/docker-entrypoint` runs `db:prepare` on boot.
-3. Service **Variables:** `DATABASE_URL` (Neon string), `RAILS_MASTER_KEY` (value of `config/master.key`), `PORT=80`.
+3. Service **Variables:** `DATABASE_URL` (Neon string), `RAILS_MASTER_KEY` (same value as the repo secret), `PORT=80`.
 4. **Settings → Networking → Generate Domain** (port `80`), then `gh secret set RAILWAY_APP_URL -R rajeevkannav/JumpStart_Pro_Plus`.
 
 Free-tier notes: the service sleeps when idle and Neon suspends its compute, so the first request after a pause is slow. Railway's trial gives $5 for 30 days, then $1 of usage a month. No background poller runs (`SOLID_QUEUE_IN_PUMA` is unset) so both can sleep. Neon free storage is 0.5 GB. Use an HTTP email API (e.g. Resend) rather than SMTP.
