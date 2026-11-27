@@ -1,0 +1,27 @@
+databases:
+  - name: jumpstart-db
+    databaseName: jumpstart_pro_plus_production
+    plan: free
+
+services:
+  - type: web
+    name: jumpstart-pro-plus
+    runtime: ruby
+    plan: free
+    region: oregon
+    buildCommand: ./bin/render-build.sh
+    startCommand: bundle exec puma -C config/puma.rb
+    healthCheckPath: /up
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: jumpstart-db
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: WEB_CONCURRENCY
+        value: 2
+      - key: SOLID_QUEUE_IN_PUMA
+        value: "true"
+      - key: RAILS_ENV
+        value: production
