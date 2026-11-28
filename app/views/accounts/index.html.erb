@@ -1,0 +1,27 @@
+<div class="w-full min-w-0">
+  <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
+    <div class="min-w-0">
+      <p class="text-xs uppercase tracking-widest text-muted font-medium mb-1">Accounts</p>
+      <h1 class="font-serif text-3xl text-ink font-normal">Your accounts</h1>
+      <p class="mt-3 text-muted">Every account you belong to. Your personal account is created for you and can't be shared or deleted.</p>
+    </div>
+    <%= link_to "New account", new_account_path, class: "inline-flex items-center justify-center min-h-[44px] px-4 py-2 bg-action hover:bg-action-hover text-white font-medium rounded-none no-underline text-sm focus-visible:outline-2 focus-visible:outline-action focus-visible:outline-offset-2" %>
+  </div>
+
+  <ul role="list" class="border-t border-rule">
+    <% @accounts.each do |account| %>
+      <li id="<%= dom_id(account) %>" class="border-b border-rule py-4 flex flex-wrap items-center justify-between gap-4">
+        <div class="min-w-0">
+          <%= link_to account.name, account, class: "font-medium text-action hover:underline break-all" %>
+          <p class="text-sm text-muted">
+            <%= account.personal? ? "Personal" : "Shared" %> &middot;
+            <%= account.owner?(Current.user) ? "Owner" : "Member" %>
+            <% if account == Current.account %>
+              &middot; <span class="text-success font-medium">Current</span>
+            <% end %>
+          </p>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>

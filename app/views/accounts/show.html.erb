@@ -1,0 +1,33 @@
+<div class="w-full min-w-0">
+  <div class="mb-8">
+    <p class="text-xs uppercase tracking-widest text-muted font-medium mb-1"><%= @account.personal? ? "Personal account" : "Shared account" %></p>
+    <h1 class="font-serif text-3xl text-ink font-normal break-all"><%= @account.name %></h1>
+    <% if @account.owner?(Current.user) %>
+      <div class="mt-4 flex flex-wrap items-center gap-4">
+        <%= link_to "Edit account", edit_account_path(@account), class: "inline-flex items-center justify-center min-h-[44px] px-4 py-2 bg-paper border border-ink text-ink font-medium rounded-none no-underline text-sm hover:bg-mist focus-visible:outline-2 focus-visible:outline-action focus-visible:outline-offset-2" %>
+      </div>
+    <% end %>
+  </div>
+
+  <section aria-labelledby="members-heading">
+    <h2 id="members-heading" class="font-serif text-2xl text-ink font-normal mb-4">Members</h2>
+    <ul role="list" class="border-t border-rule">
+      <% @members.each do |membership| %>
+        <li class="border-b border-rule py-4 flex flex-wrap items-center justify-between gap-4">
+          <span class="min-w-0 text-ink break-all"><%= membership.user.email_address %></span>
+          <span class="text-xs uppercase tracking-widest text-muted font-medium"><%= membership.role %></span>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+
+  <% if @account.owner?(Current.user) && !@account.personal? %>
+    <section class="mt-12 pt-8 border-t border-rule" aria-labelledby="delete-shared-account-heading">
+      <h2 id="delete-shared-account-heading" class="font-serif text-2xl text-ink font-normal">Delete account</h2>
+      <p class="mt-2 text-muted">Removes this account and every membership in it.</p>
+      <%= button_to "Delete this account", account_path(@account), method: :delete,
+            form: { data: { turbo_confirm: "Delete #{@account.name}? This cannot be undone." } },
+            class: "mt-4 min-h-[44px] px-4 py-2 bg-danger text-white border-0 rounded-none cursor-pointer font-medium text-base hover:opacity-90 focus-visible:outline-2 focus-visible:outline-action" %>
+    </section>
+  <% end %>
+</div>

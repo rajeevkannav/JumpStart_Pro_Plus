@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :passwords, param: :token
   resource :registration, only: [ :new, :create ]
   resource :email_confirmation, only: [ :show, :create ]
+  resources :accounts
   namespace :settings do
     resources :sessions, only: [ :index, :destroy ] do
       delete :others, on: :collection, action: :destroy_others
