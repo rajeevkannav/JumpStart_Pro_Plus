@@ -32,6 +32,14 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  .account-switcher > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .account-switcher[open] .account-switcher-caret {
+    transform: rotate(180deg);
+  }
+
   * {
     max-width: 100%;
     box-sizing: border-box;

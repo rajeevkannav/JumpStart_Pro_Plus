@@ -40,6 +40,18 @@ class AccountTest < ActiveSupport::TestCase
     assert_equal 2, users(:one).owned_accounts.where(personal: false).count
   end
 
+  test "team accounts are limited per owner" do
+    owner = users(:one)
+    (Account::TEAM_ACCOUNT_LIMIT - 1).times { |i| Account.create!(name: "Team #{i}", owner: owner) }
+
+    extra = Account.new(name: "Extra", owner: owner)
+    assert_not extra.valid?
+    assert_includes extra.errors[:base].first, "at most 10 team accounts"
+
+    assert Account.new(name: "Theirs", owner: users(:two)).valid?
+    assert accounts(:acme).valid?, "existing accounts stay valid at the limit"
+  end
+
   test "personal accounts can't be deleted" do
     account = accounts(:one_personal)
     assert_not account.destroy

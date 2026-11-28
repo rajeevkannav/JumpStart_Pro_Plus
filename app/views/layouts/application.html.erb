@@ -13,11 +13,10 @@
       <header class="bg-ink text-white border-b border-rule">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between flex-wrap gap-3">
           <%= link_to "JumpStart Pro Plus", root_path, class: "font-serif text-xl text-white hover:text-mist transition-colors no-underline font-normal" %>
-          <nav class="flex items-center gap-4 text-sm flex-wrap">
+          <nav aria-label="Main" class="flex items-center gap-4 text-sm flex-wrap min-w-0 max-w-full">
             <% if authenticated? %>
               <span class="text-mist text-xs sm:text-sm truncate max-w-[160px] sm:max-w-xs"><%= Current.user.email_address %></span>
-              <%= link_to "Account", current_account_path, class: "text-white hover:text-mist font-medium no-underline hover:underline text-xs sm:text-sm" %>
-              <%= link_to "Accounts", accounts_path, class: "text-white hover:text-mist font-medium no-underline hover:underline text-xs sm:text-sm" %>
+              <%= render "shared/account_switcher" if Current.account %>
               <%= link_to "Sessions", settings_sessions_path, class: "text-white hover:text-mist font-medium no-underline hover:underline text-xs sm:text-sm" %>
               <%= button_to "Sign out", session_path, method: :delete, class: "text-white hover:text-mist underline bg-transparent border-0 cursor-pointer p-0 font-medium text-xs sm:text-sm" %>
             <% else %>
