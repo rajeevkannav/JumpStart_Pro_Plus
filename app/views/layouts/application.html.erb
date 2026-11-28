@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>JumpStart Pro Plus</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -8,19 +8,44 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
-  <body>
+  <body class="bg-paper text-ink font-sans antialiased min-h-screen flex flex-col">
+    <% unless try(:turbo_native_app?) %>
+      <header class="bg-ink text-white border-b border-rule">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between flex-wrap gap-3">
+          <%= link_to "JumpStart Pro Plus", root_path, class: "font-serif text-xl text-white hover:text-mist transition-colors no-underline font-normal" %>
+          <nav class="flex items-center gap-4 text-sm flex-wrap">
+            <% if authenticated? %>
+              <span class="text-mist text-xs sm:text-sm truncate max-w-[160px] sm:max-w-xs"><%= Current.user.email_address %></span>
+              <%= button_to "Sign out", session_path, method: :delete, class: "text-white hover:text-mist underline bg-transparent border-0 cursor-pointer p-0 font-medium text-xs sm:text-sm" %>
+            <% else %>
+              <%= link_to "Sign in", new_session_path, class: "text-white hover:text-mist font-medium no-underline hover:underline text-xs sm:text-sm" %>
+              <%= link_to "Sign up", new_registration_path, class: "text-white hover:text-mist font-medium no-underline hover:underline text-xs sm:text-sm" %>
+            <% end %>
+          </nav>
+        </div>
+      </header>
+    <% end %>
+
     <% if authenticated? && !Current.user.email_confirmed? %>
-      <div class="bg-amber-100 p-4 text-amber-800 text-center">
-        Please confirm your email address. <%= button_to "Resend confirmation email", email_confirmation_path, method: :post, class: "underline" %>
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 pt-6 w-full box-border">
+        <div class="bg-[#fff7e0] text-[#8a5a00] border-l-4 border-[#8a5a00] p-4 text-sm font-medium flex flex-wrap items-center justify-between gap-2">
+          <span>Please confirm your email address.</span>
+          <%= button_to "Resend confirmation email", email_confirmation_path, method: :post, class: "underline bg-transparent border-0 cursor-pointer font-medium p-0 text-[#8a5a00]" %>
+        </div>
       </div>
     <% end %>
-    <div class="container mx-auto px-4 mt-10">
-      <% flash.each do |type, message| %>
-        <div class="p-4 mb-4 text-sm rounded-lg <%= type == 'notice' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800' %>" role="alert">
-          <%= message %>
-        </div>
-      <% end %>
+
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex-1 w-full box-border">
+      <%= render "shared/flash" %>
       <%= yield %>
-    </div>
+    </main>
+
+    <% unless try(:turbo_native_app?) %>
+      <footer class="border-t border-rule mt-auto py-6 bg-paper">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 text-center text-sm text-muted">
+          &copy; <%= Time.current.year %> JumpStart Pro Plus. All rights reserved.
+        </div>
+      </footer>
+    <% end %>
   </body>
 </html>

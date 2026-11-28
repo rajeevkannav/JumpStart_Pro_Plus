@@ -1,34 +1,29 @@
-<div class="max-w-md mx-auto w-full max-w-full px-4 sm:px-0">
-  <h1 class="text-3xl font-serif text-[var(--color-ink,#051c2c)] mb-6">Sign in</h1>
+<div class="max-w-md mx-auto w-full box-border">
+  <div class="mb-8">
+    <p class="text-xs uppercase tracking-widest text-muted font-medium mb-1">Account Access</p>
+    <h1 class="font-serif text-3xl text-ink font-normal">Sign in</h1>
+  </div>
 
-  <% if flash[:alert] %>
-    <div class="p-4 mb-4 text-sm text-red-800 bg-red-50 border-l-4 border-red-600" role="alert">
-      <%= flash[:alert] %>
-    </div>
-  <% end %>
-  <% if flash[:notice] %>
-    <div class="p-4 mb-4 text-sm text-green-800 bg-green-50 border-l-4 border-green-600" role="alert">
-      <%= flash[:notice] %>
-    </div>
-  <% end %>
-
-  <%= form_with url: session_path, class: "space-y-4 w-full max-w-full" do |form| %>
-    <div class="w-full max-w-full">
-      <%= form.label :email_address, "Email address", class: "block text-sm font-medium text-[var(--color-ink,#051c2c)] mb-1" %>
-      <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address], class: "w-full max-w-full min-h-[44px] px-3 py-2 border border-slate-300 rounded-none text-base focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent box-border" %>
+  <%= form_with url: session_path, class: "space-y-6 w-full" do |form| %>
+    <div>
+      <%= form.label :email_address, "Email address", class: "block text-sm font-medium text-ink mb-2" %>
+      <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "name@company.com", value: params[:email_address], class: "w-full min-h-[44px] px-3 py-2 border border-rule rounded-none text-base text-ink bg-paper focus:outline-none focus:ring-2 focus:ring-action focus:border-transparent box-border" %>
     </div>
 
-    <div class="w-full max-w-full">
-      <%= form.label :password, "Password", class: "block text-sm font-medium text-[var(--color-ink,#051c2c)] mb-1" %>
-      <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Enter your password", maxlength: 72, class: "w-full max-w-full min-h-[44px] px-3 py-2 border border-slate-300 rounded-none text-base focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent box-border" %>
+    <div>
+      <div class="flex items-center justify-between mb-2">
+        <%= form.label :password, "Password", class: "block text-sm font-medium text-ink" %>
+        <%= link_to "Forgot password?", new_password_path, class: "text-sm text-action hover:underline" %>
+      </div>
+      <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Enter your password", maxlength: 72, class: "w-full min-h-[44px] px-3 py-2 border border-rule rounded-none text-base text-ink bg-paper focus:outline-none focus:ring-2 focus:ring-action focus:border-transparent box-border" %>
     </div>
 
-    <div class="w-full max-w-full">
-      <%= form.submit "Sign in", class: "w-full max-w-full min-h-[44px] bg-[var(--color-action,#2251ff)] hover:bg-[var(--color-action-hover,#1a3fcc)] text-white font-medium py-2 px-4 rounded-none cursor-pointer transition-colors box-border" %>
+    <div>
+      <%= form.submit "Sign in", class: "w-full min-h-[44px] bg-action hover:bg-action-hover text-white font-medium py-2 px-4 rounded-none cursor-pointer border-0 transition-colors text-base" %>
     </div>
   <% end %>
 
-  <div class="mt-4 text-sm">
-    <%= link_to "Forgot password?", new_password_path, class: "text-[var(--color-action,#2251ff)] hover:underline" %>
+  <div class="mt-8 pt-6 border-t border-rule text-sm text-muted">
+    Don't have an account? <%= link_to "Sign up", new_registration_path, class: "text-action hover:underline font-medium" %>
   </div>
 </div>
