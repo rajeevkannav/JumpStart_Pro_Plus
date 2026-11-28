@@ -1,66 +1,27 @@
 {
   "schemaVersion": 1,
-  "provider": "google-ai-studio-free-tier",
-  "costUsd": 0,
-  "generatedAt": "2026-11-28T10:36:26.403Z",
+  "provider": "claude-code-local",
+  "generatedAt": "2026-11-28T13:13:09.299Z",
   "totals": {
-    "calls": 5,
-    "promptTokens": 72115,
-    "candidatesTokens": 5680,
-    "thoughtsTokens": 19448,
-    "totalTokens": 97243,
-    "elapsedMs": 129624
+    "calls": 1,
+    "turns": 20,
+    "inputTokens": 26,
+    "outputTokens": 11456,
+    "costUsdEquivalent": 0.4052685999999999,
+    "elapsedMs": 100025
   },
   "calls": [
     {
       "phase": "incremental-build",
-      "timestamp": "2026-11-28T10:31:02.475Z",
-      "model": "gemini-3.6-flash",
-      "elapsedMs": 57036,
-      "promptTokenCount": 20072,
-      "candidatesTokenCount": 3665,
-      "thoughtsTokenCount": 7946,
-      "totalTokenCount": 31683
-    },
-    {
-      "phase": "repair-1",
-      "timestamp": "2026-11-28T10:31:30.492Z",
-      "model": "gemini-3.6-flash",
-      "elapsedMs": 14865,
-      "promptTokenCount": 12607,
-      "candidatesTokenCount": 532,
-      "thoughtsTokenCount": 2295,
-      "totalTokenCount": 15434
-    },
-    {
-      "phase": "repair-2",
-      "timestamp": "2026-11-28T10:35:08.404Z",
-      "model": "gemini-3.6-flash",
-      "elapsedMs": 16996,
-      "promptTokenCount": 13137,
-      "candidatesTokenCount": 536,
-      "thoughtsTokenCount": 2950,
-      "totalTokenCount": 16623
-    },
-    {
-      "phase": "repair-3",
-      "timestamp": "2026-11-28T10:35:35.303Z",
-      "model": "gemini-3.6-flash",
-      "elapsedMs": 18911,
-      "promptTokenCount": 13148,
-      "candidatesTokenCount": 277,
-      "thoughtsTokenCount": 2544,
-      "totalTokenCount": 15969
-    },
-    {
-      "phase": "repair-4",
-      "timestamp": "2026-11-28T10:36:04.844Z",
-      "model": "gemini-3.6-flash",
-      "elapsedMs": 21816,
-      "promptTokenCount": 13151,
-      "candidatesTokenCount": 670,
-      "thoughtsTokenCount": 3713,
-      "totalTokenCount": 17534
+      "timestamp": "2026-11-28T13:12:47.633Z",
+      "provider": "claude-code",
+      "model": "sonnet",
+      "costUsd": 0.4052685999999999,
+      "turns": 20,
+      "inputTokens": 26,
+      "outputTokens": 11456,
+      "cacheReadTokens": 600406,
+      "elapsedMs": 100025
     }
   ]
 }
