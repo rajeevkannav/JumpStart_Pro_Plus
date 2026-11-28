@@ -9,6 +9,11 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
   <body>
+    <% if authenticated? && !Current.user.email_confirmed? %>
+      <div class="bg-amber-100 p-4 text-amber-800 text-center">
+        Please confirm your email address. <%= button_to "Resend confirmation email", email_confirmation_path, method: :post, class: "underline" %>
+      </div>
+    <% end %>
     <div class="container mx-auto px-4 mt-10">
       <% flash.each do |type, message| %>
         <div class="p-4 mb-4 text-sm rounded-lg <%= type == 'notice' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800' %>" role="alert">
