@@ -1,6 +1,13 @@
 class RegistrationsController < ApplicationController
   allow_unauthenticated_access only: %i[ new create ]
 
+  rate_limit to: 5, within: 1.hour, only: :create, with: -> {
+    respond_to do |format|
+      format.html { redirect_to new_registration_path, alert: "Try again later." }
+      format.json { render json: { error: "Try again later." }, status: :too_many_requests }
+    end
+  }
+
   def new
     @user = User.new
   end
