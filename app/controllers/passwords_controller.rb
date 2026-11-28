@@ -13,7 +13,7 @@ class PasswordsController < ApplicationController
   end
 
   def create
-    if user = User.find_by(email_address: params[:email_address])
+    if user = User.active.find_by(email_address: params[:email_address])
       begin
         PasswordsMailer.reset(user).deliver_later
       rescue => e
@@ -38,8 +38,8 @@ class PasswordsController < ApplicationController
 
   private
     def set_user_by_token
-      @user = User.find_by_password_reset_token!(params[:token])
-    rescue ActiveSupport::MessageVerifier::InvalidSignature
+      @user = User.active.find_by_password_reset_token!(params[:token])
+    rescue ActiveSupport::MessageVerifier::InvalidSignature, ActiveRecord::RecordNotFound
       redirect_to new_password_path, alert: "Password reset link is invalid or has expired."
     end
 end
