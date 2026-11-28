@@ -1,0 +1,35 @@
+<div class="max-w-md mx-auto w-full box-border">
+  <div class="mb-8">
+    <p class="text-xs uppercase tracking-widest text-muted font-medium mb-1">Account Security</p>
+    <h1 class="font-serif text-3xl text-ink font-normal">Set up two-factor authentication</h1>
+  </div>
+
+  <ol class="space-y-8">
+    <li>
+      <h2 class="font-serif text-xl text-ink font-normal">1. Scan this QR code</h2>
+      <p class="mt-2 text-muted">Use an authenticator app such as 1Password, Google Authenticator or Authy.</p>
+      <div class="mt-4 inline-block border border-rule p-2">
+        <%= qr_code_svg(@provisioning_uri, label: "QR code for your authenticator app") %>
+      </div>
+      <p class="mt-4 text-sm text-muted">Can't scan it? Enter this key manually:</p>
+      <p class="mt-1 bg-mist border-l-4 border-accent p-3 font-mono text-base text-ink break-all" id="otp-secret"><%= @secret.scan(/.{1,4}/).join(" ") %></p>
+    </li>
+
+    <li>
+      <h2 class="font-serif text-xl text-ink font-normal">2. Enter the 6-digit code</h2>
+      <%= form_with url: settings_two_factor_path, class: "mt-4 space-y-6 w-full" do |form| %>
+        <div>
+          <%= form.label :code, "Authentication code", class: "block text-sm font-medium text-ink mb-2" %>
+          <%= form.text_field :code, required: true, autofocus: true, autocomplete: "one-time-code", inputmode: "numeric",
+                pattern: "[0-9 ]*", maxlength: 7, aria: { describedby: "code-hint" },
+                class: "w-full min-h-[44px] px-3 py-2 border border-rule rounded-none text-base text-ink bg-paper focus:outline-none focus:ring-2 focus:ring-action focus:border-transparent box-border" %>
+          <p id="code-hint" class="mt-2 text-sm text-muted">The code your app shows for JumpStart Pro Plus.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-4">
+          <%= form.submit "Turn on two-factor authentication", class: "min-h-[44px] bg-action hover:bg-action-hover text-white font-medium py-2 px-4 rounded-none cursor-pointer border-0 transition-colors text-base focus-visible:outline-2 focus-visible:outline-action focus-visible:outline-offset-2" %>
+          <%= link_to "Cancel", settings_two_factor_path, class: "text-action hover:underline font-medium" %>
+        </div>
+      <% end %>
+    </li>
+  </ol>
+</div>

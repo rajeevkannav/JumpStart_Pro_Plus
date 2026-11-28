@@ -28,6 +28,8 @@ Rails.application.routes.draw do
     end
     get "account/delete", to: "account_deletions#new", as: :new_account_deletion
     post "account/delete", to: "account_deletions#create", as: :account_deletion
+    # TOTP two-factor for Current.user (sudo required to change it).
+    resource :two_factor, only: %i[ show new create destroy ]
   end
   # App-wide dashboard for staff only (everyone else gets a 404).
   get "staff", to: "staff/dashboard#show", as: :staff_dashboard
