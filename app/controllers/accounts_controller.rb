@@ -12,7 +12,7 @@ class AccountsController < ApplicationController
   }
 
   def index
-    @accounts = Current.user.accounts.order(personal: :desc, name: :asc)
+    @accounts = Current.user.accounts.select("accounts.*", "account_users.role AS membership_role").order(personal: :desc, name: :asc)
   end
 
   def show

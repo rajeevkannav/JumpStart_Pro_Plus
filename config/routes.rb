@@ -10,11 +10,14 @@ Rails.application.routes.draw do
   get "account", to: "accounts#show", as: :current_account
   # Older form-posted switch (account_id in the body); same controller.
   post "account/switch", to: "accounts/switches#create", as: :account_selection
-  # Invitations to Current.account (owners of team accounts only).
+  # Invitations to Current.account (admins and owners of team accounts).
   scope "account", module: :accounts, as: :account do
     resources :invitations, only: %i[ index new create destroy ]
-    # Members of Current.account (everyone lists; owners remove; members leave).
-    resources :members, only: %i[ index destroy ]
+    # Members of Current.account (everyone lists; admins and owners remove;
+    # members leave; owners change roles).
+    resources :members, only: %i[ index destroy ] do
+      resource :role, only: :update
+    end
     # Owner hands Current.account to another member (sudo required).
     resource :ownership_transfer, only: %i[ new create ]
   end

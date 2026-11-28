@@ -30,7 +30,7 @@
       <% if @account.owner?(Current.user) %>
         <%= link_to "Edit account", edit_account_path(@account), class: "inline-flex items-center justify-center min-h-[44px] px-4 py-2 bg-paper border border-ink text-ink font-medium rounded-none no-underline text-sm hover:bg-mist focus-visible:outline-2 focus-visible:outline-action focus-visible:outline-offset-2" %>
       <% end %>
-      <% if @account.owner?(Current.user) && !@account.personal? && @account == Current.account %>
+      <% if @account == Current.account && account_admin? && !@account.personal? %>
         <%= link_to "Invite members", account_invitations_path, class: "inline-flex items-center justify-center min-h-[44px] px-4 py-2 bg-paper border border-ink text-ink font-medium rounded-none no-underline text-sm hover:bg-mist focus-visible:outline-2 focus-visible:outline-action focus-visible:outline-offset-2" %>
       <% end %>
       <% if @account == Current.account %>

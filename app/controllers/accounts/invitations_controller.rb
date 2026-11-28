@@ -1,17 +1,17 @@
-# Invitations to Current.account, managed by its owner.
+# Invitations to Current.account, managed by its admins and its owner.
 #
 #   GET    /account/invitations       pending invitations
 #   GET    /account/invitations/new   invite form
 #   POST   /account/invitations       invite an email address
 #   DELETE /account/invitations/:id   revoke a pending invitation
 #
-# Members who aren't the owner get a 404 (not 403). Invitations are always
-# loaded through Current.account.invitations, so another tenant's id is a 404.
+# Plain members get a 404 (not 403). Invitations are always loaded through
+# Current.account.invitations, so another tenant's id is a 404.
 module Accounts
   class InvitationsController < ApplicationController
     include AccountScoped
 
-    before_action :require_owner
+    require_account_role :admin
     before_action :require_team_account
     rate_limit to: 20, within: 1.hour, only: :create, by: -> { Current.user.id }, with: -> {
       redirect_to account_invitations_path, alert: "You've sent a lot of invitations. Try again later."
@@ -43,10 +43,6 @@ module Accounts
     end
 
     private
-      def require_owner
-        raise ActiveRecord::RecordNotFound unless Current.account.owner?(Current.user)
-      end
-
       def require_team_account
         return unless Current.account.personal?
 
