@@ -10,6 +10,11 @@ Rails.application.routes.draw do
   get "account", to: "accounts#show", as: :current_account
   # Older form-posted switch (account_id in the body); same controller.
   post "account/switch", to: "accounts/switches#create", as: :account_selection
+  # Invitations to Current.account (owners of team accounts only).
+  scope "account", module: :accounts, as: :account do
+    resources :invitations, only: %i[ index new create destroy ]
+  end
+  get "invitations/:token", to: "invitation_acceptances#show", as: :invitation_acceptance
   namespace :settings do
     resources :sessions, only: [ :index, :destroy ] do
       delete :others, on: :collection, action: :destroy_others

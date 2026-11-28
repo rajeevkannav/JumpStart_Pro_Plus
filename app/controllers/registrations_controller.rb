@@ -21,7 +21,8 @@ class RegistrationsController < ApplicationController
       rescue => e
         Rails.logger.error "Failed to send confirmation email: #{e.class}"
       end
-      redirect_to root_path, notice: "Welcome! You have signed up successfully. Please check your email to confirm your account."
+      # Back to where sign-up was requested from (e.g. an invitation link).
+      redirect_to after_authentication_url, notice: "Welcome! You have signed up successfully. Please check your email to confirm your account."
     else
       render :new, status: :unprocessable_entity
     end
