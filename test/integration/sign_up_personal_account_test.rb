@@ -17,7 +17,7 @@ class SignUpPersonalAccountTest < ActionDispatch::IntegrationTest
 
     get accounts_path
     assert_response :success
-    assert_select "li", text: /fresh@example\.com/, count: 1
+    assert_select "main li", text: /fresh@example\.com/, count: 1
     assert_match "Personal", response.body
   end
 

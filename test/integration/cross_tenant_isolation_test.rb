@@ -53,6 +53,19 @@ class CrossTenantIsolationTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "cannot switch into another tenant's account via /accounts/:id/switch" do
+    @foreign_accounts.each do |account|
+      post account_switch_path(account)
+      assert_response :not_found
+      assert_nil Session.order(:created_at, :id).last.account_id
+    end
+  end
+
+  test "the navbar switcher never lists another tenant's accounts" do
+    get root_path
+    assert_select "#account-switcher", text: /Globex|two@example\.com/, count: 0
+  end
+
   test "an unknown id is a 404 too" do
     get account_path(id: Account.maximum(:id).to_i + 1000)
     assert_response :not_found

@@ -28,11 +28,14 @@ class AccountsController < ApplicationController
     @account = Account.new(account_params.merge(owner: Current.user, personal: false))
 
     saved = Account.transaction do
-      @account.save && @account.account_users.create!(user: Current.user, role: "owner")
+      @account.save &&
+        @account.account_users.create!(user: Current.user, role: "owner") &&
+        Current.session.update!(account: @account)
     end
 
     if saved
-      redirect_to @account, notice: "Account created."
+      Current.account = @account
+      redirect_to @account, notice: "Team account created. You're now working in #{@account.name}."
     else
       render :new, status: :unprocessable_entity
     end

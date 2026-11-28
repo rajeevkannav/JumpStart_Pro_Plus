@@ -67,6 +67,45 @@ class AccountsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "owner", account.role_for(@user)
   end
 
+  test "new shows the team account form" do
+    sign_in_as @user
+    get new_account_path
+    assert_response :success
+    assert_select "h1", "New team account"
+  end
+
+  test "creating a team account switches to it" do
+    sign_in_as @user
+    post accounts_path, params: { account: { name: "Initech" } }
+
+    account = Account.find_by!(name: "Initech")
+    assert_equal account, Session.order(:created_at, :id).last.account
+    follow_redirect!
+    assert_match "Team account created.", response.body
+
+    get current_account_path
+    assert_select "h1", "Initech"
+    assert_select "dd", "Owner"
+    assert_select "#account-switcher summary", text: /Initech/
+  end
+
+  test "a user can own at most 10 team accounts" do
+    sign_in_as @user
+    (Account::TEAM_ACCOUNT_LIMIT - 1).times do |i|
+      post accounts_path, params: { account: { name: "Team #{i}" } }
+      assert_response :redirect
+    end
+    assert_equal Account::TEAM_ACCOUNT_LIMIT, @user.owned_accounts.where(personal: false).count
+    selected = Session.order(:created_at, :id).last.account
+
+    assert_no_difference -> { Account.count } do
+      post accounts_path, params: { account: { name: "One too many" } }
+    end
+    assert_response :unprocessable_entity
+    assert_match "You can own at most 10 team accounts", response.body
+    assert_equal selected, Session.order(:created_at, :id).last.account
+  end
+
   test "create cannot be used to make a personal account or set another owner" do
     sign_in_as @user
     post accounts_path, params: { account: { name: "Initech", personal: true, owner_id: users(:two).id } }

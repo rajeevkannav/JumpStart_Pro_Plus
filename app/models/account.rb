@@ -3,6 +3,8 @@
 # through AccountUser memberships. Tenant-owned data must be reached through
 # Current.account.<association>, never with an unscoped Model.find.
 class Account < ApplicationRecord
+  TEAM_ACCOUNT_LIMIT = 10
+
   belongs_to :owner, class_name: "User"
   has_many :account_users, dependent: :destroy
   has_many :users, through: :account_users
@@ -10,6 +12,7 @@ class Account < ApplicationRecord
 
   validates :name, presence: true, length: { maximum: 100 }
   validates :owner_id, uniqueness: { conditions: -> { where(personal: true) } }, if: :personal?
+  validate :within_team_account_limit, on: :create, unless: :personal?
 
   before_destroy :prevent_personal_account_deletion
 
@@ -22,6 +25,13 @@ class Account < ApplicationRecord
   end
 
   private
+    def within_team_account_limit
+      return unless owner
+      return if owner.owned_accounts.where(personal: false).count < TEAM_ACCOUNT_LIMIT
+
+      errors.add(:base, "You can own at most #{TEAM_ACCOUNT_LIMIT} team accounts. Delete one before creating another.")
+    end
+
     def prevent_personal_account_deletion
       return unless personal?
 

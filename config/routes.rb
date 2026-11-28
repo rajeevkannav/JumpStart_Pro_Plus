@@ -4,9 +4,12 @@ Rails.application.routes.draw do
   resources :passwords, param: :token
   resource :registration, only: [ :new, :create ]
   resource :email_confirmation, only: [ :show, :create ]
-  resources :accounts
+  resources :accounts do
+    resource :switch, only: :create, module: :accounts
+  end
   get "account", to: "accounts#show", as: :current_account
-  post "account/switch", to: "account_selections#create", as: :account_selection
+  # Older form-posted switch (account_id in the body); same controller.
+  post "account/switch", to: "accounts/switches#create", as: :account_selection
   namespace :settings do
     resources :sessions, only: [ :index, :destroy ] do
       delete :others, on: :collection, action: :destroy_others
