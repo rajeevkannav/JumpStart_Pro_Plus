@@ -10,9 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_28_160000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_28_170000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "account_invitations", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "invited_by_id", null: false
+    t.string "email_address", null: false
+    t.string "token", null: false
+    t.datetime "expires_at", null: false
+    t.datetime "accepted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "email_address"], name: "index_account_invitations_pending_unique", unique: true, where: "(accepted_at IS NULL)"
+    t.index ["account_id"], name: "index_account_invitations_on_account_id"
+    t.index ["invited_by_id"], name: "index_account_invitations_on_invited_by_id"
+    t.index ["token"], name: "index_account_invitations_on_token", unique: true
+  end
 
   create_table "account_users", force: :cascade do |t|
     t.bigint "account_id", null: false
@@ -228,6 +243,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_28_160000) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "account_invitations", "accounts", on_delete: :cascade
+  add_foreign_key "account_invitations", "users", column: "invited_by_id"
   add_foreign_key "account_users", "accounts"
   add_foreign_key "account_users", "users"
   add_foreign_key "accounts", "users", column: "owner_id"

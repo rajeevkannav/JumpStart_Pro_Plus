@@ -9,6 +9,7 @@ class Account < ApplicationRecord
   has_many :account_users, dependent: :destroy
   has_many :users, through: :account_users
   has_many :sessions, dependent: :nullify
+  has_many :invitations, class_name: "AccountInvitation", dependent: :delete_all
 
   validates :name, presence: true, length: { maximum: 100 }
   validates :owner_id, uniqueness: { conditions: -> { where(personal: true) } }, if: :personal?

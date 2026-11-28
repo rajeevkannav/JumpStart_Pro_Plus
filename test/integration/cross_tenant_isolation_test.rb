@@ -66,6 +66,35 @@ class CrossTenantIsolationTest < ActionDispatch::IntegrationTest
     assert_select "#account-switcher", text: /Globex|two@example\.com/, count: 0
   end
 
+  test "cannot list, read or revoke another tenant's invitations" do
+    foreign = accounts(:globex).invitations.create!(email_address: "secret-invitee@example.com", invited_by: users(:two))
+    post account_switch_path(accounts(:acme))
+
+    get account_invitations_path
+    assert_response :success
+    assert_no_match "secret-invitee@example.com", response.body
+
+    assert_no_difference -> { AccountInvitation.count } do
+      delete account_invitation_path(foreign)
+    end
+    assert_response :not_found
+  end
+
+  test "a member of another tenant's account can't manage its invitations from their own" do
+    accounts(:globex).account_users.create!(user: @user, role: "member")
+    foreign = accounts(:globex).invitations.create!(email_address: "secret-invitee@example.com", invited_by: users(:two))
+    post account_switch_path(accounts(:globex))
+
+    get account_invitations_path
+    assert_response :not_found
+
+    assert_no_difference -> { AccountInvitation.count } do
+      delete account_invitation_path(foreign)
+      post account_invitations_path, params: { account_invitation: { email_address: "x@example.com" } }
+    end
+    assert_response :not_found
+  end
+
   test "an unknown id is a 404 too" do
     get account_path(id: Account.maximum(:id).to_i + 1000)
     assert_response :not_found
