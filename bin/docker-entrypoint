@@ -1,8 +1,12 @@
-#!/bin/bash -e
+#!/bin/bash
+set -e
 
-# If running the rails server then create or migrate existing database
-if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
+# If running the rails server, prepare the database
+if [ "$1" = "./bin/thrust" ] || [ "$1" = "./bin/rails" ]; then
   ./bin/rails db:prepare
+  if [ -n "$DEMO_EMAIL" ]; then
+    ./bin/rails db:seed
+  fi
 fi
 
-exec "${@}"
+exec "$@"

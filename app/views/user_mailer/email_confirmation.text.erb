@@ -1,4 +1,8 @@
-Hi <%= @user.email_address %>,
+Confirm your email
+==================
 
-Please confirm your email address by visiting the following link:
+Welcome, <%= @user.email_address %>!
+
+Click the link below to confirm your account:
+
 <%= email_confirmation_url(token: @token) %>
