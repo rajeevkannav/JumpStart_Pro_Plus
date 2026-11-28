@@ -1,0 +1,5 @@
+<%= form_with model: @user, url: registration_path do |f| %>
+  <%= f.email_field :email_address, required: true, placeholder: "Email" %>
+  <%= f.password_field :password, required: true, placeholder: "Password" %>
+  <%= f.submit "Sign Up" %>
+<% end %>
