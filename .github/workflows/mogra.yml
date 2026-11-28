@@ -5,6 +5,8 @@ on:
     types: [opened, labeled]
   repository_dispatch:
     types: [mogra.trigger]
+  pull_request:
+    types: [labeled] # PRs built locally by mogra (label mogra:built) are verified, merged and deployed here
 
 permissions: {}
 
