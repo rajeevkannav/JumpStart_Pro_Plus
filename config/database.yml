@@ -57,6 +57,9 @@ development:
 test:
   <<: *default
   database: jumpstart_pro_plus_test
+  # libpq's GSSAPI negotiation can hang forked parallel test workers on
+  # macOS; local/CI test databases never use GSS encryption.
+  gssencmode: disable
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
