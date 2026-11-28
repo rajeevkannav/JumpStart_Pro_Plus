@@ -3,5 +3,6 @@ class ApplicationController < ActionController::Base
   include SetCurrentAccount
   include AccountAuthorization
   include RequireSudo
+  include RequireStaff
   allow_browser versions: :modern
 end

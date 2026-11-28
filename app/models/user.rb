@@ -17,6 +17,18 @@ class User < ApplicationRecord
 
   scope :active, -> { where(deleted_at: nil) }
 
+  # Operator-only (see lib/tasks/staff.rake): grants or revokes the global
+  # staff flag. Never reachable from params.
+  def self.set_staff!(email, staff)
+    raise ArgumentError, "Usage: bin/rails \"staff:#{staff ? 'grant' : 'revoke'}[email]\"" if email.blank?
+
+    user = active.find_by(email_address: email.to_s.strip.downcase)
+    raise ActiveRecord::RecordNotFound, "No user with email #{email}" unless user
+
+    user.update!(staff: staff)
+    user
+  end
+
   generates_token_for :password_reset, expires_in: 15.minutes do
     password_salt.last(10)
   end

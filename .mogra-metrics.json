@@ -1,27 +1,27 @@
 {
   "schemaVersion": 1,
   "provider": "claude-code-local",
-  "generatedAt": "2026-11-28T15:02:23.305Z",
+  "generatedAt": "2026-11-28T15:10:42.703Z",
   "totals": {
     "calls": 1,
-    "turns": 60,
-    "inputTokens": 74,
-    "outputTokens": 27785,
-    "costUsdEquivalent": 0.8480961999999999,
-    "elapsedMs": 224909
+    "turns": 34,
+    "inputTokens": 42,
+    "outputTokens": 14836,
+    "costUsdEquivalent": 0.49287339999999996,
+    "elapsedMs": 129696
   },
   "calls": [
     {
       "phase": "incremental-build",
-      "timestamp": "2026-11-28T15:01:58.823Z",
+      "timestamp": "2026-11-28T15:10:21.287Z",
       "provider": "claude-code",
       "model": "sonnet",
-      "costUsd": 0.8480961999999999,
-      "turns": 60,
-      "inputTokens": 74,
-      "outputTokens": 27785,
-      "cacheReadTokens": 2813022,
-      "elapsedMs": 224909
+      "costUsd": 0.49287339999999996,
+      "turns": 34,
+      "inputTokens": 42,
+      "outputTokens": 14836,
+      "cacheReadTokens": 1346294,
+      "elapsedMs": 129696
     }
   ]
 }
