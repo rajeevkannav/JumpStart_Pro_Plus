@@ -1,20 +1,16 @@
 ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
+require_relative "test_helpers/session_test_helper"
 
 module ActiveSupport
   class TestCase
     parallelize(workers: :number_of_processors)
     fixtures :all
+    include SessionTestHelper
 
-    def sign_in_as(user, password: "password123456")
-      post session_url, params: { email_address: user.email_address, password: password }
+    setup do
+      Rails.cache.clear
     end
-  end
-end
-
-class ActionDispatch::IntegrationTest
-  def sign_in_as(user, password: "password123456")
-    post session_url, params: { email_address: user.email_address, password: password }
   end
 end

@@ -1,19 +1,42 @@
 require "test_helper"
 
 class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    @user = users(:two)
-  end
+  test "show confirms email with valid token" do
+    user = User.create!(email_address: "confirm_me@example.com", password: "password123456")
+    token = user.generate_token_for(:email_confirmation)
 
-  test "should confirm email with valid token" do
-    token = @user.generate_token_for(:email_confirmation)
     get email_confirmation_url(token: token)
-    assert_redirected_to root_url
-    assert @user.reload.email_confirmed?
+    assert_redirected_to root_path
+    assert_equal "Your email has been confirmed.", flash[:notice]
+    assert user.reload.email_confirmed?
   end
 
-  test "should fail email confirmation with invalid token" do
-    get email_confirmation_url(token: "invalid")
-    assert_redirected_to root_url
+  test "show with invalid token shows alert" do
+    get email_confirmation_url(token: "invalid-token")
+    assert_redirected_to root_path
+    assert_equal "Invalid or expired confirmation link.", flash[:alert]
+  end
+
+  test "create resends confirmation email for logged in user" do
+    user = User.create!(email_address: "resend@example.com", password: "password123456")
+    post session_url, params: { email_address: user.email_address, password: "password123456" }
+
+    post email_confirmation_url
+    assert_redirected_to root_path
+    assert_equal "Confirmation email sent.", flash[:notice]
+  end
+
+  test "rate limits confirmation resends per user" do
+    user = User.create!(email_address: "ratelimit@example.com", password: "password123456")
+    post session_url, params: { email_address: user.email_address, password: "password123456" }
+
+    3.times do
+      post email_confirmation_url
+      assert_redirected_to root_path
+    end
+
+    post email_confirmation_url
+    assert_redirected_to root_path
+    assert_equal "Try again later.", flash[:alert]
   end
 end

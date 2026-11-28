@@ -2,6 +2,13 @@ class EmailConfirmationsController < ApplicationController
   allow_unauthenticated_access only: %i[ show ]
   before_action :require_authentication, only: %i[ create ]
 
+  rate_limit to: 3, within: 10.minutes, only: :create, by: -> { Current.user&.id || request.remote_ip }, with: -> {
+    respond_to do |format|
+      format.html { redirect_to root_path, alert: "Try again later." }
+      format.json { render json: { error: "Try again later." }, status: :too_many_requests }
+    end
+  }
+
   def show
     if user = User.find_by_token_for(:email_confirmation, params[:token])
       user.update!(email_confirmed_at: Time.current)
