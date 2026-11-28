@@ -1,0 +1,19 @@
+one_personal:
+  name: one@example.com
+  personal: true
+  owner: one
+
+two_personal:
+  name: two@example.com
+  personal: true
+  owner: two
+
+acme:
+  name: Acme
+  personal: false
+  owner: one
+
+globex:
+  name: Globex
+  personal: false
+  owner: two

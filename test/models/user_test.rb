@@ -53,6 +53,48 @@ class UserTest < ActiveSupport::TestCase
     assert User.new(email_address: "one@example.com", password: valid_password).valid?
   end
 
+  test "creating a user creates exactly one personal account they own" do
+    user = nil
+    assert_difference -> { Account.count } => 1, -> { AccountUser.count } => 1 do
+      user = User.create!(email_address: "new@example.com", password: valid_password)
+    end
+
+    assert_equal 1, user.accounts.count
+    account = user.personal_account
+    assert account.personal?
+    assert_equal "new@example.com", account.name
+    assert account.owner?(user)
+    assert_equal "owner", account.role_for(user)
+  end
+
+  test "an invalid user creates no account" do
+    assert_no_difference -> { Account.count } do
+      User.create(email_address: "invalid", password: valid_password)
+    end
+  end
+
+  test "the personal account is rolled back with the user" do
+    assert_no_difference [ -> { User.count }, -> { Account.count }, -> { AccountUser.count } ] do
+      User.transaction do
+        User.create!(email_address: "rollback@example.com", password: valid_password)
+        raise ActiveRecord::Rollback
+      end
+    end
+  end
+
+  test "account associations" do
+    user = users(:one)
+    assert_equal accounts(:one_personal), user.personal_account
+    assert_equal [ accounts(:acme), accounts(:one_personal) ].sort_by(&:id), user.accounts.order(:id).to_a
+    assert_not_includes user.accounts, accounts(:two_personal)
+  end
+
+  test "soft_delete! renames the personal account" do
+    user = users(:one)
+    user.soft_delete!
+    assert_equal "deleted-#{user.id}@invalid", user.personal_account.reload.name
+  end
+
   test "deleted? is false for active users" do
     assert_not users(:one).deleted?
   end

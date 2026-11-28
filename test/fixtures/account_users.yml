@@ -1,0 +1,19 @@
+one_personal_owner:
+  account: one_personal
+  user: one
+  role: owner
+
+two_personal_owner:
+  account: two_personal
+  user: two
+  role: owner
+
+acme_owner:
+  account: acme
+  user: one
+  role: owner
+
+globex_owner:
+  account: globex
+  user: two
+  role: owner

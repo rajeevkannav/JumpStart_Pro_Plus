@@ -1,0 +1,17 @@
+<% if record.errors.any? %>
+  <div class="bg-mist border-l-4 border-danger p-4 mb-6 text-sm" role="alert" id="error_explanation">
+    <h2 class="font-medium text-danger mb-2"><%= pluralize(record.errors.count, "error") %> prevented saving:</h2>
+    <ul class="list-disc list-inside space-y-1 text-ink">
+      <% record.errors.each do |error| %>
+        <li>
+          <% field_id = field_id(record.model_name.param_key, error.attribute) %>
+          <% if error.attribute != :base %>
+            <a href="#<%= field_id %>" class="text-action hover:underline"><%= error.full_message %></a>
+          <% else %>
+            <%= error.full_message %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

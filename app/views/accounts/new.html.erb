@@ -1,0 +1,9 @@
+<div class="max-w-md mx-auto w-full box-border">
+  <div class="mb-8">
+    <p class="text-xs uppercase tracking-widest text-muted font-medium mb-1">Accounts</p>
+    <h1 class="font-serif text-3xl text-ink font-normal">New account</h1>
+    <p class="mt-3 text-muted">Create a shared account for a team or organisation. You will be its owner.</p>
+  </div>
+
+  <%= render "form", account: @account, submit_label: "Create account", cancel_path: accounts_path %>
+</div>

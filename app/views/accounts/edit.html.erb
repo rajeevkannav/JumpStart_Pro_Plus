@@ -1,0 +1,8 @@
+<div class="max-w-md mx-auto w-full box-border">
+  <div class="mb-8">
+    <p class="text-xs uppercase tracking-widest text-muted font-medium mb-1">Accounts</p>
+    <h1 class="font-serif text-3xl text-ink font-normal">Edit account</h1>
+  </div>
+
+  <%= render "form", account: @account, submit_label: "Save changes", cancel_path: account_path(@account) %>
+</div>

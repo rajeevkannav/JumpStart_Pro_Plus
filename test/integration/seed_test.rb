@@ -4,7 +4,10 @@ class SeedTest < ActionDispatch::IntegrationTest
   setup do
     @original_email = ENV["DEMO_EMAIL"]
     @original_password = ENV["DEMO_PASSWORD"]
-    # Ensure isolation by clearing users before each test
+    # Ensure isolation by clearing users (and the accounts that reference them) before each test
+    AccountUser.delete_all
+    Account.delete_all
+    Session.delete_all
     User.delete_all
   end
 
@@ -19,6 +22,7 @@ class SeedTest < ActionDispatch::IntegrationTest
     load Rails.root.join("db/seeds.rb")
     assert_equal 1, User.count
     assert_equal "demo@example.com", User.first.email_address
+    assert User.first.personal_account.owner?(User.first)
   end
 
   test "does_not_seed_when_variables_are_missing" do
