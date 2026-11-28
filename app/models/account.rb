@@ -6,6 +6,7 @@ class Account < ApplicationRecord
   belongs_to :owner, class_name: "User"
   has_many :account_users, dependent: :destroy
   has_many :users, through: :account_users
+  has_many :sessions, dependent: :nullify
 
   validates :name, presence: true, length: { maximum: 100 }
   validates :owner_id, uniqueness: { conditions: -> { where(personal: true) } }, if: :personal?

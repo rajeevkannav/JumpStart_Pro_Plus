@@ -2,11 +2,36 @@
   <div class="mb-8">
     <p class="text-xs uppercase tracking-widest text-muted font-medium mb-1"><%= @account.personal? ? "Personal account" : "Shared account" %></p>
     <h1 class="font-serif text-3xl text-ink font-normal break-all"><%= @account.name %></h1>
-    <% if @account.owner?(Current.user) %>
-      <div class="mt-4 flex flex-wrap items-center gap-4">
-        <%= link_to "Edit account", edit_account_path(@account), class: "inline-flex items-center justify-center min-h-[44px] px-4 py-2 bg-paper border border-ink text-ink font-medium rounded-none no-underline text-sm hover:bg-mist focus-visible:outline-2 focus-visible:outline-action focus-visible:outline-offset-2" %>
+
+    <dl class="mt-6 grid grid-cols-1 sm:grid-cols-4 gap-4 border-t border-b border-rule py-4">
+      <div class="min-w-0">
+        <dt class="text-xs uppercase tracking-widest text-muted font-medium">Type</dt>
+        <dd class="mt-1 text-ink"><%= @account.personal? ? "Personal" : "Shared" %></dd>
       </div>
-    <% end %>
+      <div class="min-w-0">
+        <dt class="text-xs uppercase tracking-widest text-muted font-medium">Your role</dt>
+        <dd class="mt-1 text-ink"><%= @role.to_s.capitalize %></dd>
+      </div>
+      <div class="min-w-0">
+        <dt class="text-xs uppercase tracking-widest text-muted font-medium">Members</dt>
+        <dd class="mt-1 text-ink"><%= @members.size %></dd>
+      </div>
+      <div class="min-w-0">
+        <dt class="text-xs uppercase tracking-widest text-muted font-medium">Status</dt>
+        <dd class="mt-1 text-ink"><%= @account == Current.account ? "Current account" : "Not selected" %></dd>
+      </div>
+    </dl>
+
+    <div class="mt-4 flex flex-wrap items-center gap-4">
+      <% unless @account == Current.account %>
+        <%= button_to "Switch to this account", account_selection_path, params: { account_id: @account.id },
+              class: "min-h-[44px] px-4 py-2 bg-action hover:bg-action-hover text-white border-0 rounded-none cursor-pointer font-medium text-sm focus-visible:outline-2 focus-visible:outline-action focus-visible:outline-offset-2" %>
+      <% end %>
+      <% if @account.owner?(Current.user) %>
+        <%= link_to "Edit account", edit_account_path(@account), class: "inline-flex items-center justify-center min-h-[44px] px-4 py-2 bg-paper border border-ink text-ink font-medium rounded-none no-underline text-sm hover:bg-mist focus-visible:outline-2 focus-visible:outline-action focus-visible:outline-offset-2" %>
+      <% end %>
+      <%= link_to "All accounts", accounts_path, class: "text-action hover:underline font-medium text-sm" %>
+    </div>
   </div>
 
   <section aria-labelledby="members-heading">
