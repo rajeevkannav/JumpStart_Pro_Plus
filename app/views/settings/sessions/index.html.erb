@@ -38,6 +38,19 @@
     </div>
   <% end %>
 
+  <section class="mt-12 pt-8 border-t border-rule" aria-labelledby="two-factor-heading">
+    <h2 id="two-factor-heading" class="font-serif text-2xl text-ink font-normal">Sign-in security</h2>
+    <p class="mt-2 text-muted">Require a code from an authenticator app as well as your password.</p>
+    <p class="mt-4 flex flex-wrap items-center gap-3">
+      <%= link_to "Two-factor authentication", settings_two_factor_path, class: "text-action font-medium underline hover:no-underline" %>
+      <% if Current.user.two_factor_enabled? %>
+        <span class="text-xs uppercase tracking-widest text-success font-medium">On</span>
+      <% else %>
+        <span class="text-xs uppercase tracking-widest text-muted font-medium">Off</span>
+      <% end %>
+    </p>
+  </section>
+
   <section class="mt-12 pt-8 border-t border-rule" aria-labelledby="delete-account-heading">
     <h2 id="delete-account-heading" class="font-serif text-2xl text-ink font-normal">Delete account</h2>
     <p class="mt-2 text-muted">Permanently close your account and sign out everywhere.</p>

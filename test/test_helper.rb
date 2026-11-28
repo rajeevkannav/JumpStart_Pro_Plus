@@ -3,6 +3,7 @@ require_relative "../config/environment"
 require "rails/test_help"
 require_relative "test_helpers/password_test_helper"
 require_relative "test_helpers/session_test_helper"
+require_relative "test_helpers/two_factor_test_helper"
 
 ActiveRecord::FixtureSet.context_class.include PasswordTestHelper
 
@@ -12,6 +13,7 @@ module ActiveSupport
     fixtures :all
     include PasswordTestHelper
     include SessionTestHelper
+    include TwoFactorTestHelper
 
     setup do
       Rails.cache.clear

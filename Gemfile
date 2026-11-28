@@ -33,3 +33,7 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+# Added by mogra
+gem "rotp"
+gem "rqrcode"

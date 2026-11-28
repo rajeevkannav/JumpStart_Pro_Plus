@@ -5,6 +5,13 @@ class User < ApplicationRecord
   has_many :accounts, through: :account_users
   has_many :owned_accounts, class_name: "Account", foreign_key: :owner_id, inverse_of: :owner
   has_one :personal_account, -> { where(personal: true) }, class_name: "Account", foreign_key: :owner_id, inverse_of: :owner
+  has_many :recovery_codes, dependent: :delete_all
+
+  OTP_ISSUER = "JumpStart Pro Plus".freeze
+  # Accept the previous and next 30-second step to allow for clock drift.
+  OTP_DRIFT = 30
+
+  encrypts :otp_secret
 
   # Runs inside the same transaction as the INSERT, so a user never exists
   # without their personal account.
@@ -45,6 +52,52 @@ class User < ApplicationRecord
     deleted_at.present?
   end
 
+  def self.generate_otp_secret
+    ROTP::Base32.random
+  end
+
+  def self.otp_code_valid?(secret, code)
+    code = code.to_s.gsub(/\s/, "")
+    return false if secret.blank? || !code.match?(/\A\d{6}\z/)
+
+    ROTP::TOTP.new(secret, issuer: OTP_ISSUER).verify(code, drift_behind: OTP_DRIFT, drift_ahead: OTP_DRIFT).present?
+  end
+
+  def otp_provisioning_uri(secret)
+    ROTP::TOTP.new(secret, issuer: OTP_ISSUER).provisioning_uri(email_address)
+  end
+
+  def two_factor_enabled?
+    otp_enabled_at.present? && otp_secret.present?
+  end
+
+  # Turns two-factor on when +code+ is valid for +secret+ and returns the
+  # new plain recovery codes, or nil (nothing changed) when it isn't.
+  def enable_two_factor!(secret, code)
+    return unless self.class.otp_code_valid?(secret, code)
+
+    transaction do
+      update!(otp_secret: secret, otp_enabled_at: Time.current)
+      RecoveryCode.regenerate_for(self)
+    end
+  end
+
+  def disable_two_factor!
+    transaction do
+      recovery_codes.delete_all
+      update!(otp_secret: nil, otp_enabled_at: nil)
+    end
+  end
+
+  # True for a current TOTP code, or for an unused recovery code (which is
+  # then spent and won't work again).
+  def verify_two_factor(code)
+    return false unless two_factor_enabled?
+    return true if self.class.otp_code_valid?(otp_secret, code)
+
+    consume_recovery_code(code)
+  end
+
   # Soft delete: keeps the row so it can be purged later, signs the user
   # out everywhere and frees the email address so it can sign up again.
   def soft_delete!
@@ -56,6 +109,13 @@ class User < ApplicationRecord
   end
 
   private
+    def consume_recovery_code(code)
+      return false if RecoveryCode.normalize(code).length != RecoveryCode::LENGTH
+
+      match = recovery_codes.unused.detect { |recovery_code| recovery_code.matches?(code) }
+      match.present? && match.consume!
+    end
+
     def create_personal_account_with_membership
       account = Account.create!(name: email_address, personal: true, owner: self)
       account.account_users.create!(user: self, role: "owner")
