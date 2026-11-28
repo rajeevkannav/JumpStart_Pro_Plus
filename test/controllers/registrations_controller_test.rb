@@ -8,15 +8,27 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create user" do
     assert_difference("User.count") do
-      post registration_url, params: { user: { email_address: "new_user@example.com", password: "password123456", password_confirmation: "password123456" } }
+      post registration_url, params: {
+        user: {
+          email_address: "newuser@example.com",
+          password: "Secret123456!",
+          password_confirmation: "Secret123456!"
+        }
+      }
     end
 
     assert_redirected_to root_url
   end
 
-  test "should not create user with invalid data" do
+  test "should not create user with invalid params" do
     assert_no_difference("User.count") do
-      post registration_url, params: { user: { email_address: "invalid", password: "short", password_confirmation: "mismatch" } }
+      post registration_url, params: {
+        user: {
+          email_address: "invalid",
+          password: "short",
+          password_confirmation: "short"
+        }
+      }
     end
 
     assert_response :unprocessable_entity

@@ -2,55 +2,35 @@
   "schemaVersion": 1,
   "provider": "google-ai-studio-free-tier",
   "costUsd": 0,
-  "generatedAt": "2026-11-28T09:27:26.520Z",
+  "generatedAt": "2026-11-28T10:18:14.594Z",
   "totals": {
-    "calls": 4,
-    "promptTokens": 55993,
-    "candidatesTokens": 3591,
-    "thoughtsTokens": 10736,
-    "totalTokens": 70320,
-    "elapsedMs": 55649
+    "calls": 2,
+    "promptTokens": 32042,
+    "candidatesTokens": 2958,
+    "thoughtsTokens": 10989,
+    "totalTokens": 45989,
+    "elapsedMs": 56998
   },
   "calls": [
     {
       "phase": "incremental-build",
-      "timestamp": "2026-11-28T09:25:33.593Z",
-      "model": "gemini-3.1-flash-lite",
-      "elapsedMs": 3830,
-      "promptTokenCount": 18793,
-      "candidatesTokenCount": 1360,
-      "thoughtsTokenCount": 0,
-      "totalTokenCount": 20153
+      "timestamp": "2026-11-28T10:17:03.934Z",
+      "model": "gemini-3.6-flash",
+      "elapsedMs": 32867,
+      "promptTokenCount": 19772,
+      "candidatesTokenCount": 1567,
+      "thoughtsTokenCount": 6530,
+      "totalTokenCount": 27869
     },
     {
       "phase": "repair-1",
-      "timestamp": "2026-11-28T09:26:40.314Z",
-      "model": "gemini-3-flash-preview",
-      "elapsedMs": 47886,
-      "promptTokenCount": 12155,
-      "candidatesTokenCount": 943,
-      "thoughtsTokenCount": 10736,
-      "totalTokenCount": 23834
-    },
-    {
-      "phase": "repair-2",
-      "timestamp": "2026-11-28T09:26:50.952Z",
-      "model": "gemini-3.1-flash-lite",
-      "elapsedMs": 1741,
-      "promptTokenCount": 12683,
-      "candidatesTokenCount": 736,
-      "thoughtsTokenCount": 0,
-      "totalTokenCount": 13419
-    },
-    {
-      "phase": "repair-3",
-      "timestamp": "2026-11-28T09:27:03.055Z",
-      "model": "gemini-3.1-flash-lite",
-      "elapsedMs": 2192,
-      "promptTokenCount": 12362,
-      "candidatesTokenCount": 552,
-      "thoughtsTokenCount": 0,
-      "totalTokenCount": 12914
+      "timestamp": "2026-11-28T10:17:52.274Z",
+      "model": "gemini-3.6-flash",
+      "elapsedMs": 24131,
+      "promptTokenCount": 12270,
+      "candidatesTokenCount": 1391,
+      "thoughtsTokenCount": 4459,
+      "totalTokenCount": 18120
     }
   ]
 }
