@@ -4,6 +4,8 @@ class SeedTest < ActionDispatch::IntegrationTest
   setup do
     @original_email = ENV["DEMO_EMAIL"]
     @original_password = ENV["DEMO_PASSWORD"]
+    @original_staff = ENV["DEMO_STAFF"]
+    ENV.delete("DEMO_STAFF")
     # Ensure isolation by clearing users (and the accounts that reference them) before each test
     AccountUser.delete_all
     Account.delete_all
@@ -14,6 +16,22 @@ class SeedTest < ActionDispatch::IntegrationTest
   teardown do
     ENV["DEMO_EMAIL"] = @original_email
     ENV["DEMO_PASSWORD"] = @original_password
+    ENV["DEMO_STAFF"] = @original_staff
+  end
+
+  test "the demo user is not staff unless DEMO_STAFF=true" do
+    ENV["DEMO_EMAIL"] = "demo@example.com"
+    ENV["DEMO_PASSWORD"] = valid_password
+    capture_io { load Rails.root.join("db/seeds.rb") }
+    assert_not User.find_by!(email_address: "demo@example.com").staff?
+
+    ENV["DEMO_STAFF"] = "yes"
+    capture_io { load Rails.root.join("db/seeds.rb") }
+    assert_not User.find_by!(email_address: "demo@example.com").staff?
+
+    ENV["DEMO_STAFF"] = "true"
+    capture_io { load Rails.root.join("db/seeds.rb") }
+    assert User.find_by!(email_address: "demo@example.com").staff?
   end
 
   test "seeds when variables are present" do

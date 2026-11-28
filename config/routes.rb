@@ -29,6 +29,8 @@ Rails.application.routes.draw do
     get "account/delete", to: "account_deletions#new", as: :new_account_deletion
     post "account/delete", to: "account_deletions#create", as: :account_deletion
   end
+  # App-wide dashboard for staff only (everyone else gets a 404).
+  get "staff", to: "staff/dashboard#show", as: :staff_dashboard
   get "up" => "rails/health#show", as: :rails_health_check
   root "pages#home"
 end
