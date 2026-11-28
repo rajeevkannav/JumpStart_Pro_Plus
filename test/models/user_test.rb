@@ -2,22 +2,22 @@ require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
   test "valid user" do
-    user = User.new(email_address: "test@example.com", password: "Secret123456!")
+    user = User.new(email_address: "test@example.com", password: valid_password)
     assert user.valid?
   end
 
   test "invalid email address" do
-    user = User.new(email_address: "invalid", password: "Secret123456!")
+    user = User.new(email_address: "invalid", password: valid_password)
     assert_not user.valid?
   end
 
   test "password length minimum 12" do
-    user = User.new(email_address: "test@example.com", password: "short")
+    user = User.new(email_address: "test@example.com", password: short_password)
     assert_not user.valid?
   end
 
   test "normalizes email address" do
-    user = User.create!(email_address: "  TEST@EXAMPLE.COM  ", password: "Secret123456!")
+    user = User.create!(email_address: "  TEST@EXAMPLE.COM  ", password: valid_password)
     assert_equal "test@example.com", user.email_address
   end
 
@@ -50,7 +50,7 @@ class UserTest < ActiveSupport::TestCase
 
   test "the freed email can be registered again" do
     users(:one).soft_delete!
-    assert User.new(email_address: "one@example.com", password: "Secret123456!").valid?
+    assert User.new(email_address: "one@example.com", password: valid_password).valid?
   end
 
   test "deleted? is false for active users" do

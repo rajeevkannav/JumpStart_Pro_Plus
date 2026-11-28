@@ -2,7 +2,7 @@ require "test_helper"
 
 class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
   test "show confirms email with valid token" do
-    user = User.create!(email_address: "confirm_me@example.com", password: "password123456")
+    user = User.create!(email_address: "confirm_me@example.com", password: valid_password)
     token = user.generate_token_for(:email_confirmation)
 
     get email_confirmation_url(token: token)
@@ -18,8 +18,8 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create resends confirmation email for logged in user" do
-    user = User.create!(email_address: "resend@example.com", password: "password123456")
-    post session_url, params: { email_address: user.email_address, password: "password123456" }
+    user = User.create!(email_address: "resend@example.com", password: valid_password)
+    post session_url, params: { email_address: user.email_address, password: valid_password }
 
     post email_confirmation_url
     assert_redirected_to root_path
@@ -27,8 +27,8 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "rate limits confirmation resends per user" do
-    user = User.create!(email_address: "ratelimit@example.com", password: "password123456")
-    post session_url, params: { email_address: user.email_address, password: "password123456" }
+    user = User.create!(email_address: "ratelimit@example.com", password: valid_password)
+    post session_url, params: { email_address: user.email_address, password: valid_password }
 
     3.times do
       post email_confirmation_url

@@ -15,7 +15,7 @@ class SeedTest < ActionDispatch::IntegrationTest
 
   test "seeds when variables are present" do
     ENV["DEMO_EMAIL"] = "demo@example.com"
-    ENV["DEMO_PASSWORD"] = "password123456"
+    ENV["DEMO_PASSWORD"] = valid_password
     load Rails.root.join("db/seeds.rb")
     assert_equal 1, User.count
     assert_equal "demo@example.com", User.first.email_address

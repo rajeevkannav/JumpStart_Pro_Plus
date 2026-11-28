@@ -39,7 +39,7 @@ class Settings::AccountDeletionsControllerTest < ActionDispatch::IntegrationTest
   test "typing DELETE soft deletes the account, signs out and shows a notice" do
     sign_in_as @user
     other_device = open_session
-    other_device.post session_url, params: { email_address: @user.email_address, password: "password123456" }
+    other_device.post session_url, params: { email_address: @user.email_address, password: valid_password }
 
     post settings_account_deletion_path, params: { confirmation: "DELETE" }
 
@@ -96,7 +96,7 @@ class Settings::AccountDeletionsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_sudo_path(return_to: settings_new_account_deletion_path)
     assert_not @user.reload.deleted?
 
-    post sudo_path, params: { password: "password123456", return_to: settings_new_account_deletion_path }
+    post sudo_path, params: { password: valid_password, return_to: settings_new_account_deletion_path }
     assert_redirected_to settings_new_account_deletion_path
 
     post settings_account_deletion_path, params: { confirmation: "DELETE" }
@@ -108,7 +108,7 @@ class Settings::AccountDeletionsControllerTest < ActionDispatch::IntegrationTest
     sign_in_as @user
     post settings_account_deletion_path, params: { confirmation: "DELETE" }
 
-    post session_url, params: { email_address: "one@example.com", password: "password123456" }
+    post session_url, params: { email_address: "one@example.com", password: valid_password }
     assert_redirected_to new_session_path
     follow_redirect!
     assert_match "Try another email address or password.", response.body
@@ -122,7 +122,7 @@ class Settings::AccountDeletionsControllerTest < ActionDispatch::IntegrationTest
     post settings_account_deletion_path, params: { confirmation: "DELETE" }
 
     assert_difference -> { User.count }, 1 do
-      post registration_path, params: { user: { email_address: "one@example.com", password: "brandnewpass123", password_confirmation: "brandnewpass123" } }
+      post registration_path, params: { user: { email_address: "one@example.com", password: new_password, password_confirmation: new_password } }
     end
     assert_redirected_to root_path
     new_user = User.find_by(email_address: "one@example.com")

@@ -8,13 +8,13 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create user" do
     assert_difference("User.count") do
-      post registration_path, params: { user: { email_address: "newuser@example.com", password: "password12345", password_confirmation: "password12345" } }
+      post registration_path, params: { user: { email_address: "newuser@example.com", password: valid_password, password_confirmation: valid_password } }
     end
     assert_redirected_to root_path
   end
 
   test "rate limits registration per IP" do
-    post registration_path, params: { user: { email_address: "otherip@example.com", password: "password12345", password_confirmation: "password12345" } }, headers: { "REMOTE_ADDR" => "192.168.1.200" }
+    post registration_path, params: { user: { email_address: "otherip@example.com", password: valid_password, password_confirmation: valid_password } }, headers: { "REMOTE_ADDR" => "192.168.1.200" }
     assert_redirected_to root_path
   end
 end

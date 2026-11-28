@@ -88,7 +88,7 @@ class Settings::SessionsControllerTest < ActionDispatch::IntegrationTest
 
   test "a revoked session can no longer access the app" do
     other_device = open_session
-    other_device.post session_url, params: { email_address: @user.email_address, password: "password123456" }
+    other_device.post session_url, params: { email_address: @user.email_address, password: valid_password }
     other_device.get settings_sessions_path
     other_device.assert_response :success
 
@@ -106,7 +106,7 @@ class Settings::SessionsControllerTest < ActionDispatch::IntegrationTest
     delete others_settings_sessions_path
     follow_redirect!
     assert_select "input[name=return_to][value=?]", settings_sessions_path
-    post sudo_path, params: { password: "password123456", return_to: settings_sessions_path }
+    post sudo_path, params: { password: valid_password, return_to: settings_sessions_path }
     assert_redirected_to settings_sessions_path
 
     delete others_settings_sessions_path

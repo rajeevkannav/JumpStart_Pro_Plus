@@ -36,7 +36,7 @@ class SudosControllerTest < ActionDispatch::IntegrationTest
     travel 20.minutes
     assert_not @session.reload.sudo?
 
-    post sudo_path, params: { password: "password123456", return_to: "/settings?tab=security" }
+    post sudo_path, params: { password: valid_password, return_to: "/settings?tab=security" }
 
     assert_redirected_to "/settings?tab=security"
     assert @session.reload.sudo?
@@ -44,7 +44,7 @@ class SudosControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "correct password without return_to redirects to root" do
-    post sudo_path, params: { password: "password123456" }
+    post sudo_path, params: { password: valid_password }
     assert_redirected_to root_path
   end
 
@@ -57,7 +57,7 @@ class SudosControllerTest < ActionDispatch::IntegrationTest
       "evil.example.com",
       "/path\r\nLocation: https://evil.example.com"
     ].each do |target|
-      post sudo_path, params: { password: "password123456", return_to: target }
+      post sudo_path, params: { password: valid_password, return_to: target }
       assert_redirected_to root_path, "expected #{target.inspect} to be ignored"
     end
   end
@@ -66,7 +66,7 @@ class SudosControllerTest < ActionDispatch::IntegrationTest
     travel 20.minutes
     sudo_at_before = @session.reload.sudo_at
 
-    post sudo_path, params: { password: "wrong-password", return_to: "/settings" }
+    post sudo_path, params: { password: wrong_password, return_to: "/settings" }
 
     assert_response :unprocessable_entity
     assert_select "h1", "Confirm your password"
@@ -81,7 +81,7 @@ class SudosControllerTest < ActionDispatch::IntegrationTest
     other.update!(sudo_at: 1.hour.ago)
     travel 20.minutes
 
-    post sudo_path, params: { password: "password123456" }
+    post sudo_path, params: { password: valid_password }
 
     assert @session.reload.sudo?
     assert_not other.reload.sudo?
