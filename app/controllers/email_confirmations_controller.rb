@@ -15,7 +15,11 @@ class EmailConfirmationsController < ApplicationController
     if Current.user.email_confirmed?
       redirect_to root_path, notice: "Email already confirmed."
     else
-      UserMailer.email_confirmation(Current.user).deliver_later
+      begin
+        UserMailer.email_confirmation(Current.user).deliver_later
+      rescue => e
+        Rails.logger.error "Failed to resend confirmation email: #{e.class}"
+      end
       redirect_to root_path, notice: "Confirmation email sent."
     end
   end
