@@ -6,4 +6,12 @@ class User < ApplicationRecord
   validates :password, length: { minimum: 12 }, allow_nil: true
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
+
+  generates_token_for :email_confirmation, expires_in: 24.hours do
+    email_address
+  end
+
+  def email_confirmed?
+    email_confirmed_at.present?
+  end
 end

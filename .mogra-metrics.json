@@ -2,55 +2,75 @@
   "schemaVersion": 1,
   "provider": "google-ai-studio-free-tier",
   "costUsd": 0,
-  "generatedAt": "2026-11-28T08:35:56.534Z",
+  "generatedAt": "2026-11-28T08:56:17.708Z",
   "totals": {
-    "calls": 4,
-    "promptTokens": 1556163,
-    "candidatesTokens": 4611,
-    "thoughtsTokens": 11062,
-    "totalTokens": 1571836,
-    "elapsedMs": 75578
+    "calls": 6,
+    "promptTokens": 2330170,
+    "candidatesTokens": 3663,
+    "thoughtsTokens": 2025,
+    "totalTokens": 2335858,
+    "elapsedMs": 41618
   },
   "calls": [
     {
       "phase": "incremental-build",
-      "timestamp": "2026-11-28T08:30:48.339Z",
+      "timestamp": "2026-11-28T08:52:39.716Z",
       "model": "gemini-3.1-flash-lite",
-      "elapsedMs": 4605,
-      "promptTokenCount": 394026,
-      "candidatesTokenCount": 1514,
+      "elapsedMs": 4833,
+      "promptTokenCount": 393765,
+      "candidatesTokenCount": 1720,
       "thoughtsTokenCount": 0,
-      "totalTokenCount": 395540
+      "totalTokenCount": 395485
     },
     {
       "phase": "repair-1",
-      "timestamp": "2026-11-28T08:32:45.866Z",
-      "model": "gemini-3.1-flash-lite",
-      "elapsedMs": 7272,
-      "promptTokenCount": 387598,
-      "candidatesTokenCount": 711,
+      "timestamp": "2026-11-28T08:52:57.708Z",
+      "model": "gemini-flash-lite-latest",
+      "elapsedMs": 2773,
+      "promptTokenCount": 387344,
+      "candidatesTokenCount": 233,
       "thoughtsTokenCount": 0,
-      "totalTokenCount": 388309
+      "totalTokenCount": 387577
     },
     {
       "phase": "repair-2",
-      "timestamp": "2026-11-28T08:33:47.424Z",
-      "model": "gemini-3-flash-preview",
-      "elapsedMs": 52938,
-      "promptTokenCount": 387207,
-      "candidatesTokenCount": 1948,
-      "thoughtsTokenCount": 11062,
-      "totalTokenCount": 400217
+      "timestamp": "2026-11-28T08:55:06.507Z",
+      "model": "gemini-3.1-flash-lite",
+      "elapsedMs": 3032,
+      "promptTokenCount": 387344,
+      "candidatesTokenCount": 693,
+      "thoughtsTokenCount": 0,
+      "totalTokenCount": 388037
     },
     {
       "phase": "repair-3",
-      "timestamp": "2026-11-28T08:35:41.850Z",
-      "model": "gemini-3.1-flash-lite",
-      "elapsedMs": 10763,
-      "promptTokenCount": 387332,
-      "candidatesTokenCount": 438,
+      "timestamp": "2026-11-28T08:55:27.802Z",
+      "model": "gemini-flash-lite-latest",
+      "elapsedMs": 13185,
+      "promptTokenCount": 387239,
+      "candidatesTokenCount": 260,
       "thoughtsTokenCount": 0,
-      "totalTokenCount": 387770
+      "totalTokenCount": 387499
+    },
+    {
+      "phase": "repair-4",
+      "timestamp": "2026-11-28T08:55:38.426Z",
+      "model": "gemini-3.1-flash-lite",
+      "elapsedMs": 2640,
+      "promptTokenCount": 387239,
+      "candidatesTokenCount": 495,
+      "thoughtsTokenCount": 0,
+      "totalTokenCount": 387734
+    },
+    {
+      "phase": "repair-5",
+      "timestamp": "2026-11-28T08:56:04.476Z",
+      "model": "gemini-3.6-flash",
+      "elapsedMs": 15155,
+      "promptTokenCount": 387239,
+      "candidatesTokenCount": 262,
+      "thoughtsTokenCount": 2025,
+      "totalTokenCount": 389526
     }
   ]
 }
