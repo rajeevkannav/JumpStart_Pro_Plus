@@ -6,6 +6,7 @@ Rails.application.configure do
   config.consider_all_requests_local = false
   config.action_controller.perform_caching = true
   config.public_file_server.enabled = true
+  config.public_file_server.headers = { "cache-control" => "public, max-age=31536000" }
   config.assets.compile = false
   config.active_storage.service = :local
   config.force_ssl = true

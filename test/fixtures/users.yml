@@ -1,4 +1,8 @@
 one:
-  email_address: user@example.com
-  password_digest: <%= BCrypt::Password.create('password123') %>
+  email_address: one@example.com
+  password_digest: <%= BCrypt::Password.create("Secret123456!", cost: 4) %>
   email_confirmed_at: <%= Time.current %>
+
+two:
+  email_address: two@example.com
+  password_digest: <%= BCrypt::Password.create("Secret123456!", cost: 4) %>
