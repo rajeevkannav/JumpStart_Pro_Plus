@@ -23,7 +23,7 @@ outcome:
   mode: incremental-feature
   capabilities:
     - rails-multi-tenant-security
-    - quantumblack-rails-ui
+    - mckinsey-light-rails-ui # light-only, McKinsey-inspired UI (no brand assets)
     - railway-neon-free-tier-ops
     - wcag-reflow-a11y
     - security-hardening
