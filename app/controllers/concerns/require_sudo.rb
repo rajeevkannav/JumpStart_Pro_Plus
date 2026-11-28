@@ -17,7 +17,14 @@ module RequireSudo
     def enforce_sudo
       return if Current.session&.sudo?
 
-      redirect_to new_sudo_path(return_to: request.fullpath)
+      redirect_to new_sudo_path(return_to: sudo_return_to)
+    end
+
+    # Where to send the user after they confirm their password. Non-GET
+    # actions (e.g. DELETE) can't be replayed by a redirect, so controllers
+    # protecting them should override this with a page to come back to.
+    def sudo_return_to
+      request.fullpath
     end
 
     # Only same-origin, relative paths are accepted ("/settings"), never

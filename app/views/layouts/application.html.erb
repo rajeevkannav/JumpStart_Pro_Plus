@@ -16,6 +16,7 @@
           <nav class="flex items-center gap-4 text-sm flex-wrap">
             <% if authenticated? %>
               <span class="text-mist text-xs sm:text-sm truncate max-w-[160px] sm:max-w-xs"><%= Current.user.email_address %></span>
+              <%= link_to "Sessions", settings_sessions_path, class: "text-white hover:text-mist font-medium no-underline hover:underline text-xs sm:text-sm" %>
               <%= button_to "Sign out", session_path, method: :delete, class: "text-white hover:text-mist underline bg-transparent border-0 cursor-pointer p-0 font-medium text-xs sm:text-sm" %>
             <% else %>
               <%= link_to "Sign in", new_session_path, class: "text-white hover:text-mist font-medium no-underline hover:underline text-xs sm:text-sm" %>
