@@ -5,8 +5,9 @@
 version: 1
 
 runtime:
-  harness: gemini-cli # gemini-cli | antigravity | claude-code | codex | goose | openhands | aider
-  model: gemini-3.1-flash-lite
+  build: local # local: `node src/local-runner.mjs build|next` on your machine with Claude Code; GitHub verifies, merges, deploys. cloud: GitHub Actions builds with Gemini
+  harness: claude-code # gemini-cli | antigravity | claude-code | codex | goose | openhands | aider
+  model: sonnet
 
 # Per-agent overrides, e.g.:
 # agents:
