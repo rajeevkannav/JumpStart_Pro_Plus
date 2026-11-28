@@ -1,0 +1,6 @@
+<% flash.each do |type, message| %>
+  <% border_class = (type.to_s == "notice" ? "border-success" : "border-danger") %>
+  <div class="bg-mist text-ink border-l-4 <%= border_class %> p-4 mb-6 text-sm font-medium" role="alert">
+    <%= message %>
+  </div>
+<% end %>
