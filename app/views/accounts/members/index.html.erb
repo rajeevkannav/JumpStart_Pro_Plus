@@ -1,0 +1,59 @@
+<div class="w-full min-w-0">
+  <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
+    <div class="min-w-0">
+      <p class="text-xs uppercase tracking-widest text-muted font-medium mb-1 break-all"><%= Current.account.name %></p>
+      <h1 class="font-serif text-3xl text-ink font-normal">Members</h1>
+      <p class="mt-3 text-muted">
+        <% if Current.account.personal? %>
+          Your personal account is just for you. Create a team account to work with others.
+        <% elsif @owner %>
+          Everyone with access to this account. Removing someone takes away their access straight away.
+        <% else %>
+          Everyone with access to this account. Only the owner can remove members.
+        <% end %>
+      </p>
+    </div>
+    <% if @owner && !Current.account.personal? %>
+      <div class="flex flex-wrap items-center gap-4">
+        <%= link_to "Invite members", account_invitations_path, class: "inline-flex items-center justify-center min-h-[44px] px-4 py-2 bg-action hover:bg-action-hover text-white font-medium rounded-none no-underline text-sm focus-visible:outline-2 focus-visible:outline-action focus-visible:outline-offset-2" %>
+        <%= link_to "Transfer ownership", new_account_ownership_transfer_path, class: "inline-flex items-center justify-center min-h-[44px] px-4 py-2 bg-paper border border-ink text-ink font-medium rounded-none no-underline text-sm hover:bg-mist focus-visible:outline-2 focus-visible:outline-action focus-visible:outline-offset-2" %>
+      </div>
+    <% end %>
+  </div>
+
+  <section aria-labelledby="members-heading">
+    <h2 id="members-heading" class="sr-only">Member list</h2>
+    <ul role="list" class="border-t border-rule">
+      <% @memberships.each do |membership| %>
+        <% you = membership.user_id == Current.user.id %>
+        <li id="<%= dom_id(membership) %>" class="border-b border-rule py-4 flex flex-wrap items-center justify-between gap-4">
+          <div class="min-w-0">
+            <p class="font-medium text-ink break-all">
+              <%= membership.user.email_address %><% if you %> <span class="text-muted font-normal">(you)</span><% end %>
+            </p>
+            <p class="text-xs uppercase tracking-widest text-muted font-medium mt-1"><%= membership.role %></p>
+          </div>
+          <% if @owner && !you && membership.user_id != Current.account.owner_id %>
+            <%= button_to "Remove", account_member_path(membership), method: :delete,
+                  form: { data: { turbo_confirm: "Remove #{membership.user.email_address} from #{Current.account.name}?" } },
+                  aria: { label: "Remove #{membership.user.email_address}" },
+                  class: "min-h-[44px] px-4 py-2 bg-paper border border-danger text-danger rounded-none cursor-pointer font-medium text-sm hover:bg-mist focus-visible:outline-2 focus-visible:outline-action focus-visible:outline-offset-2" %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+
+  <% my_membership = @memberships.find { |m| m.user_id == Current.user.id } %>
+  <% if my_membership && !@owner && !Current.account.personal? %>
+    <section class="mt-12 pt-8 border-t border-rule" aria-labelledby="leave-account-heading">
+      <h2 id="leave-account-heading" class="font-serif text-2xl text-ink font-normal">Leave account</h2>
+      <p class="mt-2 text-muted">You'll lose access to <span class="break-all"><%= Current.account.name %></span> and switch back to your personal account. The owner can invite you again later.</p>
+      <%= button_to "Leave this account", account_member_path(my_membership), method: :delete,
+            form: { data: { turbo_confirm: "Leave #{Current.account.name}?" } },
+            class: "mt-4 min-h-[44px] px-4 py-2 bg-danger text-white border-0 rounded-none cursor-pointer font-medium text-base hover:opacity-90 focus-visible:outline-2 focus-visible:outline-action focus-visible:outline-offset-2" %>
+    </section>
+  <% end %>
+
+  <p class="mt-8"><%= link_to "Back to account", current_account_path, class: "text-action hover:underline font-medium" %></p>
+</div>

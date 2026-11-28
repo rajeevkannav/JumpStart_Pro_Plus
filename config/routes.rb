@@ -13,6 +13,10 @@ Rails.application.routes.draw do
   # Invitations to Current.account (owners of team accounts only).
   scope "account", module: :accounts, as: :account do
     resources :invitations, only: %i[ index new create destroy ]
+    # Members of Current.account (everyone lists; owners remove; members leave).
+    resources :members, only: %i[ index destroy ]
+    # Owner hands Current.account to another member (sudo required).
+    resource :ownership_transfer, only: %i[ new create ]
   end
   get "invitations/:token", to: "invitation_acceptances#show", as: :invitation_acceptance
   namespace :settings do

@@ -95,6 +95,46 @@ class CrossTenantIsolationTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  test "cannot list or remove another tenant's members" do
+    foreign = accounts(:globex).account_users.create!(user: User.create!(email_address: "secret-member@example.com", password: valid_password), role: "member")
+    post account_switch_path(accounts(:acme))
+
+    get account_members_path
+    assert_response :success
+    assert_no_match "secret-member@example.com", response.body
+    assert_no_match "two@example.com", response.body
+
+    [ foreign, account_users(:globex_owner), account_users(:two_personal_owner) ].each do |membership|
+      assert_no_difference -> { AccountUser.count } do
+        delete account_member_path(membership)
+      end
+      assert_response :not_found
+    end
+  end
+
+  test "cannot transfer ownership to another tenant's user" do
+    post account_switch_path(accounts(:acme))
+
+    post account_ownership_transfer_path, params: { user_id: users(:two).id }
+    assert_response :not_found
+    assert_equal users(:one), accounts(:acme).reload.owner
+    assert_equal users(:two), accounts(:globex).reload.owner
+  end
+
+  test "a member of another tenant's account can't remove its members or take it over" do
+    accounts(:globex).account_users.create!(user: @user, role: "member")
+    post account_switch_path(accounts(:globex))
+
+    assert_no_difference -> { AccountUser.count } do
+      delete account_member_path(account_users(:globex_owner))
+    end
+    assert_response :not_found
+
+    post account_ownership_transfer_path, params: { user_id: @user.id }
+    assert_response :not_found
+    assert_equal users(:two), accounts(:globex).reload.owner
+  end
+
   test "an unknown id is a 404 too" do
     get account_path(id: Account.maximum(:id).to_i + 1000)
     assert_response :not_found

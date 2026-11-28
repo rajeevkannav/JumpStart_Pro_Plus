@@ -25,6 +25,44 @@ class Account < ApplicationRecord
     account_users.find_by(user: user)&.role
   end
 
+  # Removes a membership (an owner removing someone, or a member leaving).
+  # The owner can't be removed: ownership must be transferred first. Any of
+  # the removed user's sessions working in this account fall back to their
+  # personal account.
+  def remove_member!(membership)
+    raise ArgumentError, "membership belongs to another account" unless membership.account_id == id
+    raise MembershipError, "The owner can't leave or be removed. Transfer ownership first." if membership.user_id == owner_id
+
+    transaction do
+      membership.destroy!
+      sessions.where(user_id: membership.user_id).update_all(account_id: nil, updated_at: Time.current)
+    end
+  end
+
+  # Makes another existing member the owner. owner_id and both roles change
+  # in one transaction; the previous owner stays on as a member.
+  def transfer_ownership_to!(new_owner)
+    raise MembershipError, "Personal accounts can't be transferred." if personal?
+
+    transaction do
+      lock!
+      raise MembershipError, "You already own this account." if new_owner.id == owner_id
+      raise MembershipError, "That person can't own accounts." if new_owner.deleted?
+
+      new_membership = account_users.lock.find_by(user_id: new_owner.id)
+      raise MembershipError, "Only an existing member can become the owner." unless new_membership
+      if new_owner.owned_accounts.where(personal: false).count >= TEAM_ACCOUNT_LIMIT
+        raise MembershipError, "#{new_owner.email_address} already owns #{TEAM_ACCOUNT_LIMIT} team accounts."
+      end
+
+      account_users.where(user_id: owner_id).update_all(role: "member", updated_at: Time.current)
+      new_membership.update!(role: "owner")
+      update!(owner: new_owner)
+    end
+  end
+
+  class MembershipError < StandardError; end
+
   private
     def within_team_account_limit
       return unless owner
