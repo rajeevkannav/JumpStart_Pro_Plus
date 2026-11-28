@@ -43,6 +43,16 @@ class CrossTenantIsolationTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "cannot switch into another tenant's account" do
+    @foreign_accounts.each do |account|
+      post account_selection_path, params: { account_id: account.id }
+      assert_response :not_found
+
+      get current_account_path
+      assert_select "h1", "one@example.com"
+    end
+  end
+
   test "an unknown id is a 404 too" do
     get account_path(id: Account.maximum(:id).to_i + 1000)
     assert_response :not_found

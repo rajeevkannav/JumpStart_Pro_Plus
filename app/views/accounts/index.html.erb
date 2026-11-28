@@ -21,6 +21,11 @@
             <% end %>
           </p>
         </div>
+        <% unless account == Current.account %>
+          <%= button_to "Switch", account_selection_path, params: { account_id: account.id },
+                aria: { label: "Switch to #{account.name}" },
+                class: "min-h-[44px] px-4 py-2 bg-paper border border-ink text-ink rounded-none cursor-pointer font-medium text-sm hover:bg-mist focus-visible:outline-2 focus-visible:outline-action focus-visible:outline-offset-2" %>
+        <% end %>
       </li>
     <% end %>
   </ul>

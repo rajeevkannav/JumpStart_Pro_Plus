@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   resource :registration, only: [ :new, :create ]
   resource :email_confirmation, only: [ :show, :create ]
   resources :accounts
+  get "account", to: "accounts#show", as: :current_account
+  post "account/switch", to: "account_selections#create", as: :account_selection
   namespace :settings do
     resources :sessions, only: [ :index, :destroy ] do
       delete :others, on: :collection, action: :destroy_others

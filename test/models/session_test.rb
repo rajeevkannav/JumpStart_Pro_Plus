@@ -31,4 +31,26 @@ class SessionTest < ActiveSupport::TestCase
     assert session.reload.sudo?
     assert_in_delta Time.current, session.sudo_at, 1.second
   end
+
+  test "current_account defaults to the personal account" do
+    session = @user.sessions.create!
+    assert_equal accounts(:one_personal), session.current_account
+  end
+
+  test "current_account is the selected account the user belongs to" do
+    session = @user.sessions.create!(account: accounts(:acme))
+    assert_equal accounts(:acme), session.current_account
+  end
+
+  test "an account the user doesn't belong to can't be selected" do
+    session = @user.sessions.create!
+    assert_not session.update(account: accounts(:globex))
+    assert_includes session.errors[:account], "must be an account you belong to"
+  end
+
+  test "a foreign account id falls back to the personal account" do
+    session = @user.sessions.create!
+    session.update_column(:account_id, accounts(:globex).id)
+    assert_equal accounts(:one_personal), session.reload.current_account
+  end
 end
