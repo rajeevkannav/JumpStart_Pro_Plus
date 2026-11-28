@@ -1,9 +1,9 @@
 one:
   email_address: one@example.com
-  password_digest: <%= BCrypt::Password.create("password123456") %>
+  password_digest: <%= BCrypt::Password.create(valid_password) %>
   email_confirmed_at: <%= Time.current %>
 
 two:
   email_address: two@example.com
-  password_digest: <%= BCrypt::Password.create("password123456") %>
+  password_digest: <%= BCrypt::Password.create(valid_password) %>
   email_confirmed_at: <%= Time.current %>

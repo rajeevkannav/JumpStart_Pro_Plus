@@ -7,6 +7,8 @@ class User < ApplicationRecord
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 
+  scope :active, -> { where(deleted_at: nil) }
+
   generates_token_for :password_reset, expires_in: 15.minutes do
     password_salt.last(10)
   end
@@ -17,5 +19,18 @@ class User < ApplicationRecord
 
   def email_confirmed?
     email_confirmed_at.present?
+  end
+
+  def deleted?
+    deleted_at.present?
+  end
+
+  # Soft delete: keeps the row so it can be purged later, signs the user
+  # out everywhere and frees the email address so it can sign up again.
+  def soft_delete!
+    transaction do
+      sessions.destroy_all
+      update!(deleted_at: Time.current, email_address: "deleted-#{id}@invalid")
+    end
   end
 end

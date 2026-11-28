@@ -59,7 +59,7 @@ class RequireSudoTest < ActionDispatch::IntegrationTest
       assert_response :success
       assert_select "input[name=return_to][value=?]", "/sudo_test/sensitive"
 
-      post sudo_path, params: { password: "password123456", return_to: "/sudo_test/sensitive" }
+      post sudo_path, params: { password: valid_password, return_to: "/sudo_test/sensitive" }
       assert_redirected_to "/sudo_test/sensitive"
       follow_redirect!
       assert_response :success
@@ -72,7 +72,7 @@ class RequireSudoTest < ActionDispatch::IntegrationTest
       sign_in_as @user
       travel 16.minutes
 
-      post sudo_path, params: { password: "nope", return_to: "/sudo_test/sensitive" }
+      post sudo_path, params: { password: wrong_password, return_to: "/sudo_test/sensitive" }
       assert_response :unprocessable_entity
 
       get "/sudo_test/sensitive"

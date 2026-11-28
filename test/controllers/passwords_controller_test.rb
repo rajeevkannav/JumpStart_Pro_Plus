@@ -4,8 +4,8 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @user = User.create!(
       email_address: "user@example.com",
-      password: "password123456",
-      password_confirmation: "password123456"
+      password: valid_password,
+      password_confirmation: valid_password
     )
   end
 

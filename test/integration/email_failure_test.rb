@@ -5,7 +5,7 @@ class EmailFailureTest < ActionDispatch::IntegrationTest
     UserMailer.define_singleton_method(:email_confirmation) { |user| raise StandardError, "SMTP Down" }
 
     begin
-      post registration_path, params: { user: { email_address: "test@example.com", password: "password123456" } }
+      post registration_path, params: { user: { email_address: "test@example.com", password: valid_password } }
       assert_response :redirect
       assert_equal "Welcome! You have signed up successfully. Please check your email to confirm your account.", flash[:notice]
       assert User.find_by(email_address: "test@example.com")
