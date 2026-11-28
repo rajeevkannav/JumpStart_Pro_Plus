@@ -39,6 +39,17 @@ class Account < ApplicationRecord
     end
   end
 
+  # Switches a membership between "member" and "admin". The owner's own role
+  # can't change here and nobody becomes "owner" this way: that's
+  # transfer_ownership_to!.
+  def change_role!(membership, role)
+    raise ArgumentError, "membership belongs to another account" unless membership.account_id == id
+    raise MembershipError, "Choose member or admin." unless AccountUser::ASSIGNABLE_ROLES.include?(role.to_s)
+    raise MembershipError, "The owner's role can't be changed. Transfer ownership instead." if membership.user_id == owner_id
+
+    membership.update!(role: role.to_s)
+  end
+
   # Makes another existing member the owner. owner_id and both roles change
   # in one transaction; the previous owner stays on as a member.
   def transfer_ownership_to!(new_owner)

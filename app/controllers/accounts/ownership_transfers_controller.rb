@@ -3,14 +3,14 @@
 #   GET  /account/ownership_transfer/new   pick the new owner
 #   POST /account/ownership_transfer       transfer (user_id of a member)
 #
-# Owners only (everyone else gets a 404), team accounts only, and sudo mode
-# is required. The new owner is looked up through Current.account's own
+# Owners only (admins and members get a 404), team accounts only, and sudo
+# mode is required. The new owner is looked up through Current.account's own
 # memberships, so a non-member or another tenant's user is a 404.
 module Accounts
   class OwnershipTransfersController < ApplicationController
     include AccountScoped
 
-    before_action :require_owner
+    require_account_role :owner
     before_action :require_team_account
     require_sudo
     rate_limit to: 10, within: 15.minutes, only: :create, with: -> {
@@ -34,10 +34,6 @@ module Accounts
     end
 
     private
-      def require_owner
-        raise ActiveRecord::RecordNotFound unless Current.account.owner?(Current.user)
-      end
-
       def require_team_account
         return unless Current.account.personal?
 

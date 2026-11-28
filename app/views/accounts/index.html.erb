@@ -15,7 +15,7 @@
           <%= link_to account.name, account, class: "font-medium text-action hover:underline break-all" %>
           <p class="text-sm text-muted">
             <%= account.personal? ? "Personal" : "Shared" %> &middot;
-            <%= account.owner?(Current.user) ? "Owner" : "Member" %>
+            <%= account.owner?(Current.user) ? "Owner" : account.membership_role.to_s.capitalize %>
             <% if account == Current.account %>
               &middot; <span class="text-success font-medium">Current</span>
             <% end %>
