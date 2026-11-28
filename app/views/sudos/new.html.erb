@@ -1,0 +1,22 @@
+<div class="max-w-md mx-auto w-full box-border">
+  <div class="mb-8">
+    <p class="text-xs uppercase tracking-widest text-muted font-medium mb-1">Account Security</p>
+    <h1 class="font-serif text-3xl text-ink font-normal">Confirm your password</h1>
+    <p class="mt-3 text-muted">This is a sensitive action. Re-enter your password to continue; you won't be asked again for 15 minutes.</p>
+  </div>
+
+  <%= form_with url: sudo_path, class: "space-y-6 w-full" do |form| %>
+    <% if @return_to %>
+      <%= form.hidden_field :return_to, value: @return_to %>
+    <% end %>
+
+    <div>
+      <%= form.label :password, "Password", class: "block text-sm font-medium text-ink mb-2" %>
+      <%= form.password_field :password, required: true, autofocus: true, autocomplete: "current-password", maxlength: 72, class: "w-full min-h-[44px] px-3 py-2 border border-rule rounded-none text-base text-ink bg-paper focus:outline-none focus:ring-2 focus:ring-action focus:border-transparent box-border" %>
+    </div>
+
+    <div>
+      <%= form.submit "Confirm password", class: "w-full min-h-[44px] bg-action hover:bg-action-hover text-white font-medium py-2 px-4 rounded-none cursor-pointer border-0 transition-colors text-base" %>
+    </div>
+  <% end %>
+</div>
